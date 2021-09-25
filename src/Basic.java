@@ -20,7 +20,7 @@ public class Basic {
 
     @Test
     public void test(){
-//        List<String> list = randomString();
+        List<String> list = randomString();
         Random random = new Random();
         System.out.println(random.nextInt(32));
         if(random.nextInt(32)<0){
@@ -39,7 +39,7 @@ public class Basic {
         for (int i = 0; i < 10; i++) {
             StringBuffer stringBuffer = new StringBuffer();
             //确定字符串长度
-            int stringLength = random.nextInt();
+            int stringLength = random.nextInt(10);
             for (int j = 0; j < stringLength; j++) {
                 //先随机生成初始定义的字符串 str 的某个索引，以获取相应的字符
                 int index = random.nextInt(str.length());
