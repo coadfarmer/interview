@@ -34,10 +34,9 @@ public class Basic {
         String str = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
         Random random = new Random();
         List<String> listString = new ArrayList<String>();
-        String strArray[ ] = new String[10];
         //生成10条长度为1-10的随机字符串
         for (int i = 0; i < 10; i++) {
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             //确定字符串长度
             int stringLength = random.nextInt(10);
             for (int j = 0; j < stringLength; j++) {
