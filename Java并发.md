@@ -22,3 +22,21 @@ ThreadLocal实际上是在每一个线程中都存一个副本，保证每个线
 
 可重入锁，基于AQS实现的
 
+### java线程的五种状态
+
+1. runnable：运行状态，有可能真的在运行，有可能在等待cpu
+2. block：阻塞状态
+3. wating：等待
+4. timed_wating：限期等待
+5. terminated：结束
+
+### 线程通信的几种方式
+
+详见https://redspider.gitbook.io/concurrent/di-yi-pian-ji-chu-pian/5
+
+1. 锁与同步
+2. 等待/通知机制
+3. 信号量
+4. 管道：JDK提供了`PipedWriter`、 `PipedReader`、 `PipedOutputStream`、 `PipedInputStream`。其中，前面两个是基于字符的，后面两个是基于字节流的。
+5. 其他：ThreadLocal等
+

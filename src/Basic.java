@@ -7,15 +7,26 @@ import java.util.Random;
 public class Basic {
 
 
+//    public static void main(String[] args) {
+//        List<Integer> integerList = new ArrayList<>();
+//        integerList.add(2);
+//        integerList.add(5);
+//        integerList.add(7);
+//        integerList.add(1);
+//        System.out.println(integerList);
+//        integerList.sort((o1, o2) -> o2 - o1);
+//        System.out.println(integerList);
+//    }
+
     public static void main(String[] args) {
-        List<Integer> integerList = new ArrayList<>();
-        integerList.add(2);
-        integerList.add(5);
-        integerList.add(7);
-        integerList.add(1);
-        System.out.println(integerList);
-        integerList.sort((o1, o2) -> o2 - o1);
-        System.out.println(integerList);
+        for (int i = 0; i < 10; i++) {
+            new Thread(() -> System.out.println("线程1运行中")).start();
+
+            new Thread(() -> {
+                System.out.println("线程2运行中");
+            }).start();
+        }
+
     }
 
     @Test
