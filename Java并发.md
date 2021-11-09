@@ -22,13 +22,14 @@ ThreadLocal实际上是在每一个线程中都存一个副本，保证每个线
 
 可重入锁，基于AQS实现的
 
-### java线程的五种状态
+### java线程的六种状态
 
-1. runnable：运行状态，有可能真的在运行，有可能在等待cpu
-2. block：阻塞状态
-3. wating：等待
-4. timed_wating：限期等待
-5. terminated：结束
+1. new：初始化状态
+2. runnable：运行状态，有可能真的在运行，有可能在等待cpu
+3. block：阻塞状态
+4. wating：等待
+5. timed_wating：限期等待
+6. terminated：结束
 
 ### 线程通信的几种方式
 
