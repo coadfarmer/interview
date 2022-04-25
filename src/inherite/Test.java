@@ -6,7 +6,8 @@ public class Test {
     public void test() {
         Son son = new Son();
         Dad dad = new Dad();
-        dad.getString();
+        System.out.println(dad.getString());
+        System.out.println();
     }
 
 }

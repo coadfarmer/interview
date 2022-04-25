@@ -4,6 +4,8 @@ public class Dad {
 
     private String name;
 
+    private int salary;
+
     String getString() {
         return name;
     }

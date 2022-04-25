@@ -61,15 +61,19 @@ String内部被标记为final
 
 #### ArrayList和LinkedList
 
-​ 大多数情况下使用的都是ArrayList，因为ArrayList支持随机访问，在get（index）的时候ArrayList更快
+大多数情况下使用的都是ArrayList，因为ArrayList支持随机访问，在get（index）的时候ArrayList更快
 
 #### ArrayList扩容
 
-​ 1.8之前：数组+链表 拉链法
+1.8之前：数组+链表 拉链法
 
-​ 1.8之后：数组+链表+红黑树 红黑树用于处理hash值相同的链表长度超过8的时候（如果链表长度小于64，会优先扩容链表）TREEIFY_THRESHOLD>8时进行链表树化(也就是Node<K,V>的链表长度大于8时，Node<
+1.8之后：数组+链表+红黑树 红黑树用于处理hash值相同的链表长度超过8的时候（如果链表长度小于64，会优先扩容链表）TREEIFY_THRESHOLD>8时进行链表树化(也就是Node<K,V>的链表长度大于8时，Node<
 K,V>转化为红黑树)，由链表转化为红黑树，注意到当Node<K,V>[] table的长度小于64时是不会进行树化的，以避免调整大小和树化阈值之间发生冲突
 
-​	
+#### HashMap
+
+1,7之前使用头插法，因为头插法速度快
+
+1.8及之后采用尾插法，无性能问题（本来就要遍历到最后一个元素然后插入），防止成环
 
    
