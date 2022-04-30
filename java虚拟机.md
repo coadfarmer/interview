@@ -1,3 +1,5 @@
+## JVM
+
 ### java内存模型
 
 ![](无标题.png)
@@ -5,9 +7,23 @@
 ### 各区域作用
 
 - 程序计数器：记录当前线程执行的字节码行数，字节码解析器的工作是通过改变这个计数器的值，来选取下一条需要执行的字节码指令。分支、循环、跳转、异常处理、线程恢复等基础功能，都依赖程序计数器来完成。
+
 - Java 虚拟机栈（Java Virtual Machine Stacks）：存储局部变量表，操作数栈，动态链接，方法出口等信息。
+
 - 本地方法栈（Native Method Stack）：与Java虚拟机栈的作用是一样的，只不过Java虚拟机栈是服务于Java方法的，本地方法栈是为虚拟机调用Native方法服务的。
-- Java堆（Java Heap）：存储对象实例
+
+- Java堆（Java Heap）：存储对象实例。
+
+  堆通常又可以再分为新生代，老生代和永久代。
+
+  如下图所示Eden区，Survivor区（S0，S1）属于新生代，中间属于老年代，最下层属于永久代
+
+  ![hotspot-heap-structure](https://javaguide.cn/assets/hotspot-heap-structure.784465da.png)
+
+  对象首先在Eden区分配空间，当一次垃圾回收完成之后，如果对象依然存活，则会从Eden转移到Survivor区，年龄加1。在Survivor区中年龄增加到一定岁数（默认是15岁），就会被晋升到老年代中。大对象会直接进入老年代。
+
+  Java8之后永久代被元空间取代，元空间使用的是直接内存。
+
 - 方法区（Method Area）：存储已经被虚拟机加载的类数据，常量，静态变量，即时编译后的代码等数据。
 
 ### 说一下堆栈的区别
@@ -22,9 +38,26 @@
 - 浅拷贝（shallow Copy）: 浅拷贝只是增加了一个指针指向被拷贝的内存地址
 - 深拷贝（deep Copy）：增加了一个新的指针指向了新的内存地址
 
+## 类加载
+
 ### java虚拟机的类加载过程
 
 加载-验证-准备-解析-初始化
+
+### 什么是类加载器，类加载器有哪些
+
+实现通过类的权限定名获取该类的二进制的字节流代码块叫做类加载器。
+
+主要有四种类加载器：
+
+- 启动类加载器（Bootstrap ClassLoader），用来加载核心类库，无法被java程序直接使用。
+- 扩展类加载器（Extensions Classloader），用来加载java的扩展库。
+- 系统类加载器（System Classloader），根据java应用的类（classpath）路径来加载java类，一般来说，java应用的类都是由它来加载完成的。
+- 用户自定义类加载器，通过继承java.lang.ClassLoader类的方式实现
+
+### 什么是双亲委派机制
+
+当类加载器收到类加载请求时，它首先不会自己去加载这个类，而是把这个请求委派给父类加载器去完成，每一层的类加载器都是如此，这样所有的类加载请求都会被传送到顶层的启动类加载器中，只有当父加载器无法加载，子加载器才会去尝试加载。
 
 ### java中提供的几种对象创建方式
 
@@ -35,6 +68,13 @@
 | 使用Constructor类的newInstance方法 | 调用了构造函数   |
 | 使用clone方法                      | 没有调用构造函数 |
 | 使用反序列化                       | 没有调用构造函数 |
+
+### JAVA中有哪些引用类型
+
+- 强引用（默认）：只要引用存在，发生gc时不会被回收
+- 软引用（SoftReference）：有用但不是必须的对象，在内存溢出之前会被回收
+- 弱引用（WeakReference）：有用但不是必须的对象，在下一次GC时会被回收
+- 虚引用（PhantomReference）：无法通过虚引用获得对象，用 PhantomReference 实现虚引用，虚引用的用途是在 gc 时返回一个通知。
 
 ### Java会存在内存泄漏吗？实际遇到过吗？
 
@@ -98,5 +138,33 @@ GC采用有向图的方式记录和管理堆中的所有对象，去判断哪些
 
    G1收集器在后台维护了一个优先列表，每次根据允许的收集时间，优先回收价值最大的Region。
 
+8. ZGC收集器
+
+   ZGC收集器对CMS收集器和G1收集器进行了进一步改进，延迟更低，stop the world的情况更少。
+
 ### JVM调优
 
+#### JVM调优工具简介
+
+在JDK安装目录的bin目录下，有很多jdk调优工具，其中命令行工具有比如：
+
+- jps（JVM Process Status）:查看所有java进程;
+- jstat（JVM Statistics Monitoring Tool）：用于收集 HotSpot 虚拟机各方面的运行数据;
+- jinfo（Configuration Info for Java）：显示虚拟机配置信息;
+- jmap（Memory Map for Java）：生成堆转储快照
+- jhat（JVM Heap Dump Browser）：用于分析 heapdump 文件，它会建立一个 HTTP/HTML 服务器，让用户可以在浏览器上查看分析结果;
+- jstack（Stack Trace for Java）：生成虚拟机当前时刻的线程快照，线程快照就是当前虚拟机内每一条线程正在执行的方法堆栈的集合。
+
+可视化工具
+
+- JConsole：用于对JVM中内存、线程和类进行监控。
+- JVisualVM：JDK 自带的全能分析工具，可以分析：内存快照、线程快照、程序死锁、监控内存的变化、gc 变化等。
+
+#### 常用的调优参数
+
+- -Xms2g：初始化推大小为 2g；
+- -Xmx2g：堆最大内存为 2g；
+- -XX:NewRatio=4：设置年轻的和老年代的内存比例为 1:4；
+- -XX:SurvivorRatio=8：设置新生代 Eden 和 Survivor 比例为 8:2；
+- -XX:+UseConcMarkSweepGC：指定使用 CMS + Serial Old 垃圾回收器组合；
+- -XX:+PrintGC：开启打印 gc 信息；
