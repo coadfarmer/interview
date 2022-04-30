@@ -59,12 +59,24 @@ public class Basic {
             //判断当前的list容器中是否已有刚生成的字符串，满足每条字符串不可重复性
             if (!(listString.contains(stringBuffer.toString()))) {
                 listString.add(stringBuffer.toString());
-            }else {
+            } else {
                 i--;
             }
 
         }
         return listString;
+    }
+
+    @Test
+    public void testArrayList() {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        long l1 = System.currentTimeMillis();
+        arrayList.ensureCapacity(134217728);
+        for (int i = 0; i < Integer.MAX_VALUE >> 4; i++) {
+            arrayList.add((int) (Math.random() * 10000));
+        }
+        System.out.println(System.currentTimeMillis() - l1);
+        System.out.println(arrayList.size());
     }
 
 
