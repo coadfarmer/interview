@@ -24,18 +24,16 @@ String内部被标记为final
    private final byte[] value;
    ```
 
-不可变的好处：
+##### 不可变的好处：
 
 - String的hash值经常被使用，String不可变使得hash值也不变，只需要进行一次hash运算
 - String经常作为参数，String不可变使其参数更安全
 - 线程安全
 - String Pool引用更快
 
-3. StringBuilder与StringBuffer
+##### StringBuilder与StringBuffer
 
-   StringBuilder速度快 ，StringBuffer线程安全
-
-4. Object
+StringBuilder速度快 ，StringBuffer线程安全
 
 ### 二、面向对象
 
@@ -117,12 +115,12 @@ HashMap只有在数组长度>64以及链表长度>8的时候才会进行树化�
 
 #### 什么是反射机制
 
-在运行状态中，对于任意一个类，都可以获取它的所有属性和方法，这种动态获取的能力，就叫反射。
+对于任意一个类，在运行状态中，动态获取它的所有属性和方法，就叫反射。
 
 #### 反射的优点和缺点
 
 - 优点：运行期类型的判断，动态加载类，提高代码灵活度
-- 缺点：反射相当于一系列解释性操作，性能比直接的java代码慢很多
+- 缺点：反射相当于一系列解释性操作，性能比直接的java代码慢
 
 #### 举几个反射用到的例子
 
