@@ -6,7 +6,7 @@ public class Dad {
 
     private int salary;
 
-    String getString() {
+    private String getString() {
         return name;
     }
 

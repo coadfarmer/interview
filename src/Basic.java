@@ -1,6 +1,7 @@
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -77,6 +78,13 @@ public class Basic {
         }
         System.out.println(System.currentTimeMillis() - l1);
         System.out.println(arrayList.size());
+    }
+
+    @Test
+    public void testHashMap() {
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("1", "22sdfawerffdfgdsgert534534342");
+        hashMap.forEach((s, s2) -> System.out.println(hashMap.get(s).hashCode()));
     }
 
 

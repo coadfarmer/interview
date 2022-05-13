@@ -28,7 +28,6 @@ String内部被标记为final
 
 - String的hash值经常被使用，String不可变使得hash值也不变，只需要进行一次hash运算
 - String经常作为参数，String不可变使其参数更安全
-- 线程安全
 - String Pool引用更快
 
 ##### StringBuilder与StringBuffer
@@ -48,12 +47,12 @@ StringBuilder速度快 ，StringBuffer线程安全
 
 #### 初始化顺序
 
-- 父类（静态变量、静态语句块）
-- 子类（静态变量、静态语句块）
-- 父类（实例变量、普通语句块）
-- 父类（构造函数）
-- 子类（实例变量、普通语句块）
-- 子类（构造函数）
+1. 父类（静态变量、静态语句块）
+2. 子类（静态变量、静态语句块）
+3. 父类（实例变量、普通语句块）
+4. 父类（构造函数）
+5. 子类（实例变量、普通语句块）
+6. 子类（构造函数）
 
 ### 三、java容器
 
@@ -185,6 +184,13 @@ public interface InvocationHandler {
 - method：与代理类对象调用的方法相对应
 - args：当前method方法的参数
 
+###### JDK动态代理的步骤
+
+1. 被代理类必须实现一个接口，接口中的方法就是我们进行功能扩展的方法；
+2. 定义一个JDK动态代理类实现InvocationHandler接口中invoke（）方法；
+3. 利用Proxy.newProxyInstance得到代理类；
+4. 调用代理类中被扩展的方法；
+
 JDK代理有一个致命弊端是只能代理实现了接口的类，为了解决这个问题，我们需要CGLIB动态代理
 
 ##### CGLIB动态代理
@@ -192,7 +198,7 @@ JDK代理有一个致命弊端是只能代理实现了接口的类，为了解�
 步骤
 
 1. 自定义MethodInterceptor，实现其中的interceptor方法，对目标类进行增强
-2. 获取代理类，使用Enhancer
+2. 使用Enhancer获得代理类
 
 ##### 两者比较
 
@@ -204,22 +210,25 @@ CGLIB可以代理任何类，JDK动态代理只能代理实现了接口的类或
 
 UNINX操作系统下，一共有5种IO模型：同步阻塞I/O，同步非阻塞I/O，I/O多路复用，信号驱动I/O，异步I/O
 
+根据大学里学到的操作系统相关的知识：为了保证操作系统的稳定性和安全性，一个进程的地址空间划分为 **用户空间（User space）** 和 **内核空间（Kernel space ）**
+，我们平常运行的应用程序都是在用户空间，内核空间可以操作系统态级别的资源。
+
 #### JAVA中的三种常见IO模型
 
 #### BIO（BlockingIO）
 
-BIO属于同步阻塞I/O。
+BIO属于同步阻塞I/O。一个请求对应一个线程。
 
 应用程序发起read调用后，会一直阻塞，直到内核把数据拷贝到用户空间。
 
 在客户端连接数量不高的情况下，是没问题的，但在面对十万甚至百万级连接的时候，传统的BIO模型是无能为力的。这时候就需要更高效的I/O模型来应对更高的并发量。
 
-#### NIO
+#### NIO（Non Blocking IO）
 
-NIO在Java1.4中引入，对应java.nio包，它是支持面向缓冲的，基于管道的I/O操作方法。对于高负载，高并发的应用，应使用NIO。
+NIO通过selector（select、poll、epoll）实现了一个线程对应多个请求，selector会进行轮询，有IO请求就处理。
 
-#### AIO
+#### AIO （Asynchronous IO）
 
-AIO是在java7中引入的，它采用一种回调机制，减少了轮询次数，进一步优化了NIO。
+AIO是在java7中引入的，它引入了异步通道的概念，先由操作系统完成后通知服务端启动线程去处理，代替原来的轮询操作
 
-![img](https://images.xiaozhuanlan.com/photo/2020/33b193457c928ae02217480f994814b6.png)
+![img](https://img-blog.csdnimg.cn/20200921144020401.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2l0d3htaW5n,size_16,color_FFFFFF,t_70)
