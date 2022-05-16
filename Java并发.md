@@ -6,14 +6,14 @@
 
 ### 线程的6种状态
 
-| 状态名称    | 状态说明 |
-| ----------- | :------- |
-| NEW         | 初始状态 |
-| RUNNABLE    | 运行中   |
-| BLOCKED     | 阻塞     |
-| WATING      | 等待     |
-| TIME_WATING | 超时     |
-| TERMINATED  | 终止     |
+| 状态名称    | 状态说明 | 代码                     |
+| ----------- | :------- | ------------------------ |
+| NEW         | 初始状态 | new一个实例              |
+| RUNNABLE    | 运行中   | 调用start（）方法        |
+| BLOCKED     | 阻塞     | Synchronized等锁         |
+| WATING      | 等待     | Object.wait()/notify（） |
+| TIME_WATING | 超时     | Thread.sleep(time)       |
+| TERMINATED  | 终止     | run方法执行完            |
 
 ### Java对象头与锁标志位
 
@@ -35,15 +35,62 @@
 | 轻量级锁 | 竞争的线程不会堵塞，提高了程序的响应速度                     | 始终得不到锁的线程，使用自旋会消耗CPU        | 追求响应时间，同步块执行速度非常块，只有两个线程竞争锁 |
 | 重量级锁 | 线程竞争不使用自旋，不会消耗CPU                              | 线程堵塞，响应时间缓慢                       | 追求吞吐量，同步块执行速度比较慢，竞争锁的线程大于2个  |
 
-> 详见https://segmentfault.com/a/1190000038403889#:~:text=%E5%81%8F%E5%90%91%E9%94%81%E6%98%AFHotSpot%20%E8%99%9A%E6%8B%9F,%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%AA%A4%E9%9C%80%E8%A6%81%E5%8E%9F%E5%AD%90%E6%8C%87%E4%BB%A4%E3%80%82
+> 详见
+>
+>
+
+[Java15为什么废弃偏向锁]: https://segmentfault.com/a/1190000038403889#:~:text=%E5%81%8F%E5%90%91%E9%94%81%E6%98%AFHotSpot%20%E8%99%9A%E6%8B%9F,%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%AA%A4%E9%9C%80%E8%A6%81%E5%8E%9F%E5%AD%90%E6%8C%87%E4%BB%A4%E3%80%82
+
+### synchronized 和 ReentrantLock 的区别
+
+1. 两者都是可重入锁
+    - 可重入锁：也叫递归锁。是指在一个线程中，可以多次获取同一把锁。
+2. synchronized依赖于JVM而ReentrantLock依赖于API
+3. ReentrantLock比Synchronized增加了一些高级功能
+    - 等待可中断
+    - 可实现公平锁
 
 ### volatile
 
-原子操作，防止指令重排
+- 保证被volatile修饰的变量存取都在主存中进行
+
+- 原子操作，防止指令重排
 
 ### ThreadLocal
 
-ThreadLocal实际上是在每一个线程中都存一个副本，保证每个线程的变量独立
+ThreadLocal实际上是在每一个线程中存储的一个变量副本。
+
+```java
+public class Thread implements Runnable {
+    ThreadLocal.ThreadLocalMap threadLocals = null;
+}
+```
+
+```java
+public class ThreadLocal<T> {
+    public void set(T value) {
+        Thread t = Thread.currentThread();
+        ThreadLocalMap map = getMap(t);
+        if (map != null) {
+            map.set(this, value);
+        } else {
+            createMap(t, value);
+        }
+    }
+    void createMap(Thread t, T firstValue) {
+        t.threadLocals = new ThreadLocalMap(this, firstValue);
+    }
+}
+```
+
+### 读写锁
+
+- 当写锁没有被线程持有时，多个线程能共同持有读锁
+- 当写锁被线程持有时，读线程获取读锁的操作会被阻塞，其他线程获取写锁的操作也会被阻塞
+
+读写锁在读多写少的场景能发挥优势。
+
+### 可重入锁
 
 ### 乐观锁与悲观锁
 
@@ -53,7 +100,7 @@ ThreadLocal实际上是在每一个线程中都存一个副本，保证每个线
 
 - 乐观锁
 
-  总是假设最好的状态，每次拿数据的时候都认为别人不会修改，所以不会上锁。但是在更新的时候会判断一下别人有没有更新这个数据，可以使用CAS实现。
+  总是假设最好的状态，每次拿数据的时候都认为别人不会修改，所以不会上锁。但是在更新的时候会判断一下别人有没有更新这个数据。乐观锁可以使用CAS和版本号实现。
 
 ### 什么是CAS
 

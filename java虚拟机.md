@@ -20,7 +20,8 @@
 
   ![hotspot-heap-structure](https://javaguide.cn/assets/hotspot-heap-structure.784465da.png)
 
-  对象首先在Eden区分配空间，当一次垃圾回收完成之后，如果对象依然存活，则会从Eden转移到Survivor区，年龄加1。在Survivor区中年龄增加到一定岁数（默认是15岁），就会被晋升到老年代中。大对象会直接进入老年代。
+  对象首先在Eden区分配空间，当一次垃圾回收完成之后，如果对象依然存活，则会从Eden转移到Survivor区，年龄加1。在Survivor区中年龄增加到一定岁数（默认是15岁,可以通过参数 `-XX:MaxTenuringThreshold`
+  来设置），就会被晋升到老年代中。大对象会直接进入老年代。
 
   Java8之后永久代被元空间取代，元空间使用的是直接内存。
 
@@ -36,7 +37,7 @@
 ### [深拷贝](https://so.csdn.net/so/search?q=深拷贝&spm=1001.2101.3001.7020)和浅拷贝
 
 - 浅拷贝（shallow Copy）: 浅拷贝只是增加了一个指针指向被拷贝的内存地址
-- 深拷贝（deep Copy）：增加了一个新的指针指向了新的内存地址
+- 深拷贝（deep Copy）：增加了一个新的指针指向了**新的内存地址**
 
 ## 类加载
 
@@ -132,17 +133,17 @@ GC采用有向图的方式记录和管理堆中的所有对象，去判断哪些
 
    清除阶段：清除被标记的对象所占用的空间
 
-2. 标记-复制算法
+2. 标记-复制算法（效率高）
 
-   为了解决效率问题，将内存划分为大小相同的两块，当一块的内存使用完只会，就将还存活的对象复制到另一块去，然后清除这一块的空间。
+   把内存划分为大小相同的两块，当一块的内存使用完之后，将还存活的对象复制到另一块去，然后清除这一块的空间。
 
 3. 标记-整理
 
-   与标记-清除算法类似，不同的是在标记可回收对象后将所有的存活对象压缩到内存一端，然后对端边界以外的内存进行回收
+   与标记-清除算法类似，不同的是在标记可回收对象后将所有的存活对象压缩到内存一端，然后对端 边界以外的内存进行回收
 
 4. 分代收集
 
-   新生代使用标记-复制算法，老年代使用标记-清除和标记-整理算法
+   将JVM堆内存分为新生代和老年代，新生代使用标记-复制算法，老年代使用标记-清除和标记-整理算法
 
 ### 垃圾收集器
 
@@ -185,11 +186,9 @@ GC采用有向图的方式记录和管理堆中的所有对象，去判断哪些
 在JDK安装目录的bin目录下，有很多jdk调优工具，其中命令行工具有比如：
 
 - jps（JVM Process Status）:查看所有java进程;
-- jstat（JVM Statistics Monitoring Tool）：用于收集 HotSpot 虚拟机各方面的运行数据;
-- jinfo（Configuration Info for Java）：显示虚拟机配置信息;
+- jstat（JVM Statistics Monitoring Tool）：查看某个java进程的运行数据;
 - jmap（Memory Map for Java）：生成堆转储快照
-- jhat（JVM Heap Dump Browser）：用于分析 heapdump 文件，它会建立一个 HTTP/HTML 服务器，让用户可以在浏览器上查看分析结果;
-- jstack（Stack Trace for Java）：生成虚拟机当前时刻的线程快照，线程快照就是当前虚拟机内每一条线程正在执行的方法堆栈的集合。
+- jstack（Stack Trace for Java）：生成虚拟机当前时刻的线程快照
 
 可视化工具
 
@@ -202,5 +201,7 @@ GC采用有向图的方式记录和管理堆中的所有对象，去判断哪些
 - -Xmx2g：堆最大内存为 2g；
 - -XX:NewRatio=4：设置年轻的和老年代的内存比例为 1:4；
 - -XX:SurvivorRatio=8：设置新生代 Eden 和 Survivor 比例为 8:2；
-- -XX:+UseConcMarkSweepGC：指定使用 CMS + Serial Old 垃圾回收器组合；
+- -XX:MetaspaceSize=256m： 元数据空间的初始大小256m；
+- -XX:+UserParNewGC：设置年轻代为并行收集；
+- -XX:+UseConcMarkSweepGC：使用CMS收集器收集；
 - -XX:+PrintGC：开启打印 gc 信息；
