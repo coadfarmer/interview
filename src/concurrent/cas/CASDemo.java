@@ -7,10 +7,15 @@ import java.util.concurrent.Executors;
 /**
  * @Author: xjjiang
  * @Data: 2022/5/16 16:00
- * @Description:
+ * @Description: CAS模拟多个线程累加count
  */
 public class CASDemo {
+
+    /**
+     * 线程数
+     */
     private static final int threadCount = 20;
+
     private volatile static int count = 0;
 
     public static void main(String[] args) throws InterruptedException {
@@ -19,6 +24,7 @@ public class CASDemo {
 
         final CountDownLatch countDownLatch = new CountDownLatch(threadCount);
 
+        //每个线程加1000
         for (int i = 0; i < threadCount; i++) {
             threadPool.execute(() -> {
                 for (int j = 0; j < 1000; j++) {
@@ -37,7 +43,7 @@ public class CASDemo {
     }
 
 
-    static void increase() {
+    public static void increase() {
         /*
          *  compareAndSwap()方法进行判断，模拟自旋操作，如果是false就一直轮询，当且仅当期望值与compareAndSwap中的期望值相等时进行修改
          */
@@ -49,11 +55,15 @@ public class CASDemo {
 
     static synchronized boolean compareAndSwap(int expected, int newCount) {
         if (count == expected) {
-            System.out.println("expected:" + expected);
+//            System.out.println("expected:" + expected);
             count = newCount;
             return true;
         }
         return false;
+    }
+
+    public static int getCount() {
+        return count;
     }
 
 }
