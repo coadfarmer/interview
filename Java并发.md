@@ -6,14 +6,14 @@
 
 ### 线程的6种状态
 
-| 状态名称    | 状态说明 | 代码                     |
-| ----------- | :------- | ------------------------ |
-| NEW         | 初始状态 | new一个实例              |
-| RUNNABLE    | 运行中   | 调用start（）方法        |
-| BLOCKED     | 阻塞     | Synchronized等锁         |
-| WATING      | 等待     | Object.wait()/notify（） |
-| TIME_WATING | 超时     | Thread.sleep(time)       |
-| TERMINATED  | 终止     | run方法执行完            |
+| 状态名称     | 中文名   | 解释                                    |
+| ------------ | :------- | --------------------------------------- |
+| NEW          | 初始状态 | new一个实例                             |
+| RUNNABLE     | 可运行   | 调用start（）方法                       |
+| BLOCKED      | 阻塞     | Synchronized等锁                        |
+| WAITING      | 等待     | Object.wait()，只有通过notify（）能唤醒 |
+| TIME_WAITING | 超时     | Thread.sleep(time)                      |
+| TERMINATED   | 终止     | run方法执行完                           |
 
 ### Java对象头与锁标志位
 
@@ -44,17 +44,18 @@
 ### synchronized 和 ReentrantLock 的区别
 
 1. 两者都是可重入锁
-    - 可重入锁：也叫递归锁。是指在一个线程中，可以多次获取同一把锁。
+  - 可重入锁：也叫递归锁。是指在一个线程中，可以多次获取同一把锁。
 2. synchronized依赖于JVM而ReentrantLock依赖于API
 3. ReentrantLock比Synchronized增加了一些高级功能
-    - 等待可中断
-    - 可实现公平锁
+  - 等待可中断
+  - 可实现公平锁
 
 ### volatile
 
 - 保证被volatile修饰的变量存取都在主存中进行
 
 - 原子操作，防止指令重排
+
 
 ### ThreadLocal
 
@@ -121,23 +122,49 @@ CAS: compare and swap（比较与交换），是一种有名的无锁算法。�
 原子类，主要包括一下四大类
 
 - 基本类型
+
+  - AtomicInteger
+  - AtomicLong
+  - AtomicBoolean
+
+  > 相比于AtomicLong，在Java8以上推荐使用LongAdder，在高竞争下，这个的吞吐量更高
+
 - 数组类型
+
+  - AtomicIntegerArray
+  - AtomicLongArray
+  - AtomicReferenceArray
+
 - 引用类型
+
+  - AtomicReference
+  - AtomicStampedReference ：带有版本号的引用类型原子类，可以解决ABA问题
+  - AtomicMarkableReference：带有标记的引用类型原子类
+
 - 对象的属性修改类型
+
+  - AtomicIntegerFieldUpdater
+  - AtomicLongFieldUpdater
+  - AtomicReferenceFieldUpdater
 
 使用CAS+volatile和native方法实现原子操作，避免了synchronized的高开销。
 
 ### AQS简述
 
-1. AQS是一个用来构建锁和同步器的框架
-2. AQS 核心思想是，如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效工作线程，并且将共享资源设置为锁定状态。如果被请求的共享资源被占用，那么就需要一套线程阻塞等待被唤醒时锁分配机制，这个机制 就是AQS
-   是用CLH队列锁，就是将暂时获取不到锁的线程加入到队列中。
-3. AQS通过一个Volatile的int类型的成员变量state来表示同步状态，通过内置的FIFO队列来完成资源获取的排队工作，通过CAS完成对state值的修改
+1. AQS（AbstractQueuedSynchronizer）是一个用来构建锁和同步器的框架
+2. AQS
+   核心思想是，如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效工作线程，并且将共享资源设置为锁定状态。如果被请求的共享资源被占用，那么就需要一套线程阻塞等待被唤醒时锁分配机制，AQS是用CLH队列锁实现这个分配机制的，就是将暂时获取不到锁的线程加入到队列中。
+3. AQS通过一个volatile的int类型的成员变量state来表示同步状态，通过内置的队列来完成资源获取的排队工作，通过CAS完成对state值的修改
+
+### 公平锁与非公平锁
+
+- **公平锁** ：按照线程在队列中的排队顺序，先到者先拿到锁
+- **非公平锁** ：当线程要获取锁时，先通过两次 CAS 操作去抢锁，如果没抢到，当前线程再加入到队列中等待唤醒。
 
 ### AQS组件
 
 - Semaphore(信号量)：可以指定多个线程访问同一个资源
-- CountDownLatch（倒计时）：用来控制线程等待，它可以让某一个线程等待到倒计时结束再执行
+- CountDownLatch（倒计时）：用来控制线程等待，它可以让某一个线程等待到设定的临界值或倒计时结束再执行
 - CyclicBarrier(循环栅栏)：和CountDownLatch类似，它也可以实现线程等待，但它的功能比CountDownLatch更复杂和强大
 
 AQS框架
@@ -207,8 +234,10 @@ tryAcquire，tryRelease
 
 ### Excutor框架
 
-Executor 框架是 Java5 之后引进的，在 Java 5 之后，通过 Executor 来启动线程比使用 Thread 的 start 方法更好，除了更易管理，效率更好（用线程池实现，节约开销）外，还有关键的一点：有助于避免
-this 逃逸问题。
+Executor 框架是 Java5 之后引进的，在 Java 5 之后，通过 Executor 来启动线程比使用 Thread 的 start
+方法更好，除了更易管理，效率更好（用线程池实现，节约开销）外，还有关键的一点：有助于避免this 逃逸问题。
+
+> this逃逸问题：在构造方法调用之前就持有了这个对象的引用，调用尚未构造完全的对象的方法显然是不合理的
 
 ### **ThreadPoolExecutor**
 

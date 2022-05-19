@@ -17,15 +17,15 @@ public class TestCompletableFuture {
     }
 
     @Test
-    public void test1() {
-        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
-            try {
-                Thread.sleep(1000L);
-                return "test";
-            } catch (Exception e) {
-                return "failed test";
-            }
-        });
+    public void testExceptionally() throws InterruptedException {
+        CompletableFuture<String> future = CompletableFuture
+                .supplyAsync(() -> {
+                    int i = 5 / 0;
+                    return "test";
+                })
+                .exceptionally(throwable -> "[ERROR]: " + throwable.toString());
+        //如果主线程不进入TIME_WAITING状态，可能导致异步线程中的异常捕获不到
+        //Thread.sleep(1000L);
         future.complete("manual test");
         System.out.println(future.join());
     }
@@ -34,7 +34,7 @@ public class TestCompletableFuture {
      * 简单Future构建
      */
     @Test
-    public void test2() {
+    public void testNewFuture() {
         CompletableFuture<String> future = new CompletableFuture<>();
 
         new Thread(() -> future.complete("test")).start();
@@ -46,7 +46,7 @@ public class TestCompletableFuture {
      * supplyAsync方式创建
      */
     @Test
-    public void test() {
+    public void testSupplyAsync() {
         CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "test");
         System.out.println(future.join());
     }
