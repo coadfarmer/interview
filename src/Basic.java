@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Basic {
 
@@ -85,6 +87,37 @@ public class Basic {
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("1", "22sdfawerffdfgdsgert534534342");
         hashMap.forEach((s, s2) -> System.out.println(hashMap.get(s).hashCode()));
+    }
+
+    @Test
+    public void testLinkedBlockingQueue() {
+        LinkedBlockingQueue<Integer> linkedBlockingQueue = new LinkedBlockingQueue<>(2);
+//        for (int i = 0; i < 3; i++) {
+        try {
+            linkedBlockingQueue.put(1);
+            linkedBlockingQueue.put(2);
+            linkedBlockingQueue.put(3);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+//        }
+        linkedBlockingQueue.forEach(System.out::println);
+    }
+
+    @Test
+    public void testArrayBlockQueue() throws InterruptedException {
+        ArrayBlockingQueue<Integer> blockingQueue = new ArrayBlockingQueue<>(2);
+        try {
+            blockingQueue.put(1);
+            blockingQueue.put(2);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        blockingQueue.forEach(System.out::println);
+        System.out.println(blockingQueue.peek());
+        blockingQueue.take();
+        System.out.println(blockingQueue.peek());
+
     }
 
 

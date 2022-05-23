@@ -30,7 +30,7 @@ public class ThreadPoolExecutorDemo {
             executor.execute(worker);
         }
         //终止线程池
-//        executor.shutdown();
+        executor.shutdown();
         while (!executor.isTerminated()) {
         }
         System.out.println("Finished all threads");

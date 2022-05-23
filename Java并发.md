@@ -2,7 +2,7 @@
 
 提高系统的整体并发能力和性能。
 
-从计算机底层的角度来说，在单核时代多线程通过上下文切换以提高系统的整体利用率，多核时代减少了上下文切换的开销，进一步提高了效率。
+从计算机底层的角度来说，在单核时代多线程通过上下文切换以提高系统的整体利用率，多核时代减少了上下文切换的开销，进一步提高了资源利用率。
 
 ### 线程的6种状态
 
@@ -25,6 +25,8 @@
 
 自旋锁是指当一个线程在试图获取锁的时候，如果锁已经被其他线程获取，那么该线程将循环等待，直到获取到它需要的锁。
 
+通过参数**-XX:PreBlockSpin**设置自旋次数
+
 ### Synchronized
 
 在Java早期版本，Synchronized锁属于重量级锁，Java1.6对Synchronized锁进行了大量优化，主要是使Synchronized锁随着竞争激烈从偏向锁，轻量级锁，重量级锁不断升级，锁升级之后不能降级。
@@ -35,17 +37,13 @@
 | 轻量级锁 | 竞争的线程不会堵塞，提高了程序的响应速度                     | 始终得不到锁的线程，使用自旋会消耗CPU        | 追求响应时间，同步块执行速度非常块，只有两个线程竞争锁 |
 | 重量级锁 | 线程竞争不使用自旋，不会消耗CPU                              | 线程堵塞，响应时间缓慢                       | 追求吞吐量，同步块执行速度比较慢，竞争锁的线程大于2个  |
 
-> 详见
->
->
-
-[Java15为什么废弃偏向锁]: https://segmentfault.com/a/1190000038403889#:~:text=%E5%81%8F%E5%90%91%E9%94%81%E6%98%AFHotSpot%20%E8%99%9A%E6%8B%9F,%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%AA%A4%E9%9C%80%E8%A6%81%E5%8E%9F%E5%AD%90%E6%8C%87%E4%BB%A4%E3%80%82
+> 详见《[不可不说的 Java“锁”事](https://tech.meituan.com/2018/11/15/java-lock.html)》
 
 ### synchronized 和 ReentrantLock 的区别
 
 1. 两者都是可重入锁
   - 可重入锁：也叫递归锁。是指在一个线程中，可以多次获取同一把锁。
-2. synchronized依赖于JVM而ReentrantLock依赖于API
+2. synchronized依赖于JVM而ReentrantLock依赖于AQS
 3. ReentrantLock比Synchronized增加了一些高级功能
   - 等待可中断
   - 可实现公平锁
@@ -156,6 +154,16 @@ CAS: compare and swap（比较与交换），是一种有名的无锁算法。�
    核心思想是，如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效工作线程，并且将共享资源设置为锁定状态。如果被请求的共享资源被占用，那么就需要一套线程阻塞等待被唤醒时锁分配机制，AQS是用CLH队列锁实现这个分配机制的，就是将暂时获取不到锁的线程加入到队列中。
 3. AQS通过一个volatile的int类型的成员变量state来表示同步状态，通过内置的队列来完成资源获取的排队工作，通过CAS完成对state值的修改
 
+### AQS重要方法
+
+| 方法名                                      | 描述                                                         |
+| :------------------------------------------ | :----------------------------------------------------------- |
+| protected boolean isHeldExclusively()       | 该线程是否正在独占资源。只有用到 Condition 才需要去实现它。  |
+| protected boolean tryAcquire(int arg)       | 独占方式。arg 为获取锁的次数，尝试获取资源，成功则返回 True，失败则返回 False。 |
+| protected boolean tryRelease(int arg)       | 独占方式。arg 为释放锁的次数，尝试释放资源，成功则返回 True，失败则返回 False。 |
+| protected int tryAcquireShared(int arg)     | 共享方式。arg 为获取锁的次数，尝试获取资源。负数表示失败；0 表示成功，但没有剩余可用资源；正数表示成功，且有剩余资源。 |
+| protected boolean tryReleaseShared(int arg) | 共享方式。arg 为释放锁的次数，尝试释放资源，如果释放后允许唤醒后续等待结点返回 True，否则返回 False。 |
+
 ### 公平锁与非公平锁
 
 - **公平锁** ：按照线程在队列中的排队顺序，先到者先拿到锁
@@ -167,15 +175,17 @@ CAS: compare and swap（比较与交换），是一种有名的无锁算法。�
 - CountDownLatch（倒计时）：用来控制线程等待，它可以让某一个线程等待到设定的临界值或倒计时结束再执行
 - CyclicBarrier(循环栅栏)：和CountDownLatch类似，它也可以实现线程等待，但它的功能比CountDownLatch更复杂和强大
 
-AQS框架
+详见
 
-![img](https://p1.meituan.net/travelcube/82077ccf14127a87b77cefd1ccf562d3253591.png)
+《[不可不说的 Java“锁”事](https://tech.meituan.com/2018/11/15/java-lock.html)》
 
 ### ReentrantLock
 
 可重入锁，基于AQS实现的
 
-tryAcquire，tryRelease
+lock（）调用tryAcquire尝试获取锁
+
+unlock（）调用tryRelease释放锁
 
 ### 线程通信的几种方式
 
@@ -232,12 +242,27 @@ tryAcquire，tryRelease
 - **提高响应速度**。当任务到达时，任务可以不需要等待线程创建就能立即执行。
 - **提高线程的可管理性**。使用线程池可以进行统一的分配，调优和监控。
 
-### Excutor框架
+### Executor框架
 
 Executor 框架是 Java5 之后引进的，在 Java 5 之后，通过 Executor 来启动线程比使用 Thread 的 start
 方法更好，除了更易管理，效率更好（用线程池实现，节约开销）外，还有关键的一点：有助于避免this 逃逸问题。
 
 > this逃逸问题：在构造方法调用之前就持有了这个对象的引用，调用尚未构造完全的对象的方法显然是不合理的
+
+### Executors
+
+Executors类中几种常见的线程池：
+
+- FixedThreadPool：固定线程数的线程池，只有一个参数确定核心线程数和最大线程数
+- SingleThreadExecutor ：只有一个线程的线程池
+- CachedThreadPool ：一个会根据需要创建新线程的线程池
+- ScheduledThreadPoolExecutor ：一个定期执行任务的线程池
+
+阿里巴巴开发手册中强制不允许使用Executors
+
+> 1）FixedThreadPool 和 SingleThreadPool: 允许的请求队列长度为 Integer.MAX_VALUE，可能会堆积大量的请求，从而导致 OOM。
+>
+>  2）CachedThreadPool 和 ScheduledThreadPool: 允许的创建线程数量为 Integer.MAX_VALUE，可能会创建大量的线程，从而导致 OOM
 
 ### **ThreadPoolExecutor**
 
@@ -278,7 +303,17 @@ public ThreadPoolExecutor(int corePoolSize,//线程池的核心线程数量
 #### 其他常见参数
 
 - keepAliveTime：当线程数大于核心线程数时，多余的空闲线程存活的最长时间
+
 - unit：keepAliceTime参数的时间单位
+
 - threadFactory：线程工厂，用来创建线程
+
 - handler：饱和策略
+
+  - **`ThreadPoolExecutor.AbortPolicy`** ：抛出 `RejectedExecutionException`来拒绝新任务的处理。（默认）
+
+  - **`ThreadPoolExecutor.CallerRunsPolicy`** ：调用执行自己的线程运行任务，也就是直接在调用`execute`方法的线程中运行(`run`)
+    被拒绝的任务，如果执行程序已关闭，则会丢弃该任务。因此这种策略会降低对于新任务提交速度，影响程序的整体性能。如果您的应用程序可以承受此延迟并且你要求任何一个任务请求都要被执行的话，你可以选择这个策略。
+  - **`ThreadPoolExecutor.DiscardPolicy`** ：不处理新任务，直接丢弃掉。
+  - **`ThreadPoolExecutor.DiscardOldestPolicy`** ： 此策略将丢弃最早的未处理的任务请求
 
