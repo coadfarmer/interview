@@ -17,7 +17,7 @@
 
 ### Java对象头与锁标志位
 
-![image-20220428153612127](C:\Users\38293\AppData\Roaming\Typora\typora-user-images\image-20220428153612127.png)
+![img](https://img2020.cnblogs.com/blog/443934/202012/443934-20201207134826598-1740849743.png)
 
 对象头MarkWord中有两位是锁标识位，有1位是偏向锁标识为，通过标识位的改变升级锁
 
