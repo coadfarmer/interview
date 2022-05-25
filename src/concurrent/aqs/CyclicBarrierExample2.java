@@ -4,9 +4,9 @@ import java.util.concurrent.*;
 
 public class CyclicBarrierExample2 {
   // 请求的数量
-  private static final int threadCount = 20;
-  // 需要同步的线程数量
-  private static final CyclicBarrier cyclicBarrier = new CyclicBarrier(5);
+  private static final int threadCount = 550;
+    // 需要同步的线程数量
+    private static final CyclicBarrier cyclicBarrier = new CyclicBarrier(5);
 
   public static void main(String[] args) {
     // 创建线程池

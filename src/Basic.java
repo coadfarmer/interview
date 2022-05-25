@@ -33,17 +33,17 @@ public class Basic {
     }
 
     @Test
-    public void test(){
+    public void test() {
         List<String> list = randomString();
         Random random = new Random();
         System.out.println(random.nextInt(32));
-        if(random.nextInt(32)<0){
+        if (random.nextInt(32) < 0) {
             System.out.println(
             );
         }
     }
 
-    public List<String> randomString(){
+    public List<String> randomString() {
         //将所有的大小写字母和0-9数字存入字符串中
         String str = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
         Random random = new Random();
@@ -118,6 +118,13 @@ public class Basic {
         blockingQueue.take();
         System.out.println(blockingQueue.peek());
 
+    }
+
+    @Test
+    public void testStringLength() {
+        String s = "a";
+        System.out.println(s.length());
+        System.out.println("我".length());
     }
 
 

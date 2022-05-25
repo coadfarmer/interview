@@ -89,8 +89,6 @@ public class ThreadLocal<T> {
 
 读写锁在读多写少的场景能发挥优势。
 
-### 可重入锁
-
 ### 乐观锁与悲观锁
 
 - 悲观锁
@@ -171,7 +169,7 @@ CAS: compare and swap（比较与交换），是一种有名的无锁算法。�
 
 ### AQS组件
 
-- Semaphore(信号量)：可以指定多个线程访问同一个资源
+- Semaphore(信号量)：可以指定多个线程访问同一个资源，Semaphore经常用于限制获取某个资源的线程数量
 - CountDownLatch（倒计时）：用来控制线程等待，它可以让某一个线程等待到设定的临界值或倒计时结束再执行
 - CyclicBarrier(循环栅栏)：和CountDownLatch类似，它也可以实现线程等待，但它的功能比CountDownLatch更复杂和强大
 
