@@ -93,13 +93,6 @@ Spring Bean生命周期总的来说分四步
 
 实例化 → 属性赋值 → 初始化 → 销毁
 
-protected Object doCreateBean(String beanName, RootBeanDefinition mbd, @Nullable Object[] args) throws
-BeanCreationException {
-BeanWrapper instanceWrapper = null;
-if (mbd.isSingleton()) {
-instanceWrapper = (BeanWrapper)this.factoryBeanInstanceCache.remove(beanName);
-}
-
 ```java
 protected Object doCreateBean(String beanName,RootBeanDefinition mbd,@Nullable Object[]args)throws BeanCreationException{
         BeanWrapper instanceWrapper=null;
@@ -132,27 +125,29 @@ protected Object doCreateBean(String beanName,RootBeanDefinition mbd,@Nullable O
 
 代码详见：https://github.com/coadfarmer/spring-demo-beanCycle
 
-详细流程图
-
-![SpringBean生命周期](SpringBean生命周期.png)
+详细流程：
 
 1. 实例化（Instantiation）：利用反射调用构造方法实例化Bean
 2. 属性赋值（Populate）：调用set（）方法
 3. 初始化（Initialization）
-    1. 检查Aware的相关接口并设置相关依赖
-        - Spring检测到Bean实现了Aware接口，会注入相应的依赖。通过让Bean实现Aware接口，能在bean中获得相应的Spring容器资源
-        - BeanNameAware：注入当前Bean对应的Bean Name；
-        - BeanClassLoaderAware：注入加载当前Bean的ClassLoader；
-        - BeanFactoryAware：注入当前BeanFactory容器的引用。
-    2. BeanPostProcessor前置处理方法postProcessBeforeInlitialization()方法
-        - 执行ApplicationContextAware方法，注入ApplicationContextAware
-    3. 实现InitializingBean接口中的afterPropertiesSet()方法
-        - afterPropertiesSet()写一些初始化逻辑，比如校验
-    4. 是否配置自定义的init-method方法
-    5. BeanPostProcessor后置处理
+   1. BeanNameAware 的setBeanName
+   2. BeanClassLoaderAware 的setBeanClassLoader
+   3. BeanFactoryAware 的setBeanFactory
+   4. EnvironmentAware 的setEnvironment
+   5. EmbeddedValueResolverAware 的setEmbeddedValueResolver
+   6. ResourceLoaderAware 的setResourceLoader （仅在应用程序上下文中运行时适用）
+   7. ApplicationEventPublisherAware 的setApplicationEventPublisher （仅在应用程序上下文中运行时适用）
+   8. MessageSourceAware 的setMessageSource （仅在应用程序上下文中运行时适用）
+   9. ApplicationContextAware 的setApplicationContext （仅在应用程序上下文中运行时适用）
+   10. ServletContextAware 的setServletContext （仅适用于在 Web 应用程序上下文中运行时）
+   11. BeanPostProcessors 的postProcessBeforeInitialization方法
+   12. InitializingBean 的afterPropertiesSet
+   13. 自定义init-method定义
+   14. BeanPostProcessors 的postProcessAfterInitialization方法
 4. 销毁（Destruction）
-    1. 调用DisposableBean中的destroy（）方法
-    2. 如果配置文件中定义了destroy-method属性，执行相应方法
+   1. DestructionAwareBeanPostProcessors 的postProcessBeforeDestruction方法
+   1. 调用DisposableBean中的destroy（）方法
+   2. 如果配置文件中定义了destroy-method属性，执行相应方法
 
 ### 单例Bean的线程安全问题
 
