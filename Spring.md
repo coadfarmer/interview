@@ -61,7 +61,7 @@ BeanFactory和ApplicationContext是Spring的两大核心接口，都可以当做
 
 ### 什么是SpringBean？
 
-一句话，被IoC容器管理的对象。
+一句话，被IoC容器管理的对象。在代码实现上是BeanDefinition的实例
 
 我们需要告诉IoC容器帮我们管理哪些对象，这个是通过配置元数据来定义的。配置元数据可以是XML文件、注解或Java配置类。
 
