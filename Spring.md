@@ -1,5 +1,5 @@
 ## Spring 概述
-### ![Spring主要模块](https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/jvme0c60b4606711fc4a0b6faf03230247a.png)
+### ![Spring主要模块](../../Pictures/jvme0c60b4606711fc4a0b6faf03230247a.png)
 
 ### 什么是Spring？
 
@@ -92,7 +92,6 @@ BeanFactory和ApplicationContext是Spring的两大核心接口，都可以当做
 
 - BeanFactory：可以简单理解为一个HashMap，Key是BeanName，Value是Bean实例。通常只提供put和get两个功能。
 -
-
 ApplicationContext：是一个高级容器，它比BeanFactory多了很多功能。它支持BeanFactory工具类，访问文件资源，事件发布通知，接口回调等功能。它内部定义了一个refresh方法，用于刷新整个容器，重新加载所有的Bean。
 
 ![img](https://img-blog.csdnimg.cn/20191105111441363.png)
