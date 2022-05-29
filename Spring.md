@@ -48,12 +48,52 @@ IoC是一种设计思想，而不是一个具体的技术实现。IoC的思想�
 
 IoC容器是Spring用来实现IoC的载体，IoC容器实际上是个Map，实现原理是工厂模式加反射机制。
 
+### IOC流程
+
+1. 获得一个刷新后的BeanFactory
+
+   ```java
+   ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();//AbstractApplicationContext.refresh()
+   ```
+
+2. 加载Bean的定义信息（xml配置，注解）
+
+   ```java
+   loadBeanDefinitions(beanFactory);  //AbstractRefreshableApplicationContext.refreshBeanFactory()
+   ```
+
+3. 配置工厂的上下文特征，比如工厂的类加载器和后处理器
+
+   ```
+   prepareBeanFactory(beanFactory);
+   ```
+
+4. 调用Bean工厂的后处理方法
+
+   ```java
+   invokeBeanFactoryPostProcessors(beanFactory); 
+   ```
+
+5. 注册Bean实例的后处理方法
+
+   ```
+   registerBeanPostProcessors(beanFactory);
+   ```
+
+6. 国际化->初始化多播器->初始化其他特殊bean->注册监听器
+
+7. bean的生命周期
+
+8. 结束，发布相应的event
+
 ### BeanFactory & ApplicationContext
 
 BeanFactory和ApplicationContext是Spring的两大核心接口，都可以当做Spring的容器。ApplicationContext是BeanFactory的子接口。
 
 - BeanFactory：可以简单理解为一个HashMap，Key是BeanName，Value是Bean实例。通常只提供put和get两个功能。
-- ApplicationContext：是一个高级容器，它比BeanFactory多了很多功能。它支持BeanFactory工具类，访问文件资源，事件发布通知，接口回调等功能。它内部定义了一个refresh方法，用于刷新整个容器，重新加载所有的Bean。
+-
+
+ApplicationContext：是一个高级容器，它比BeanFactory多了很多功能。它支持BeanFactory工具类，访问文件资源，事件发布通知，接口回调等功能。它内部定义了一个refresh方法，用于刷新整个容器，重新加载所有的Bean。
 
 ![img](https://img-blog.csdnimg.cn/20191105111441363.png)
 
@@ -130,20 +170,20 @@ protected Object doCreateBean(String beanName,RootBeanDefinition mbd,@Nullable O
 1. 实例化（Instantiation）：利用反射调用构造方法实例化Bean
 2. 属性赋值（Populate）：调用set（）方法
 3. 初始化（Initialization）
-   1. BeanNameAware 的setBeanName
-   2. BeanClassLoaderAware 的setBeanClassLoader
-   3. BeanFactoryAware 的setBeanFactory
-   4. EnvironmentAware 的setEnvironment
-   5. EmbeddedValueResolverAware 的setEmbeddedValueResolver
-   6. ResourceLoaderAware 的setResourceLoader （仅在应用程序上下文中运行时适用）
-   7. ApplicationEventPublisherAware 的setApplicationEventPublisher （仅在应用程序上下文中运行时适用）
-   8. MessageSourceAware 的setMessageSource （仅在应用程序上下文中运行时适用）
-   9. ApplicationContextAware 的setApplicationContext （仅在应用程序上下文中运行时适用）
-   10. ServletContextAware 的setServletContext （仅适用于在 Web 应用程序上下文中运行时）
-   11. BeanPostProcessors 的postProcessBeforeInitialization方法
-   12. InitializingBean 的afterPropertiesSet
-   13. 自定义init-method定义
-   14. BeanPostProcessors 的postProcessAfterInitialization方法
+   1. 检查aware相关接口并执行实现的set方法（为了让bean获取spring容器中的服务）
+      1. beanName
+      2. beanClassLoader
+      3. beanFactory
+      4. environment
+      5. EmbeddedValueResolver
+      6. ResourceLoader
+      7. ApplicationEventPublisher
+      8. MessageSource
+      9. ApplicationContext
+      10. ServletContext
+   2. 调用BeanPostProcessor中postProcess**Before**Initialization方法
+   3. 初始化（如果实现了InitializingBean接口会在初始化前调用afterPropertiesSet）
+   4. 调用BeanPostProcessor中postProcess**After**Initialization方法
 4. 销毁（Destruction）
    1. DestructionAwareBeanPostProcessors 的postProcessBeforeDestruction方法
    1. 调用DisposableBean中的destroy（）方法
@@ -191,23 +231,31 @@ AspectJ的功能比Spring的功能更强大，而且速度更快。所以Spring�
 
 #### Spring 管理事务的方式有几种？
 
-- **编程式事务** ： 在代码中硬编码(不推荐使用) : 通过 `TransactionTemplate`或者 `TransactionManager` 手动管理事务，实际应用中很少使用，但是对于你理解 Spring
-  事务管理原理有帮助。
+- **编程式事务** ： 在代码中硬编码(不推荐使用) : 通过 `TransactionTemplate`或者 `TransactionManager` 手动管理事务，实际应用中很少使用，但是对于你理解 Spring事务管理原理有帮助。
 - **声明式事务** ： 在 XML 配置文件中配置或者直接基于注解（推荐使用） : 实际是通过 AOP 实现（基于`@Transactional` 的全注解方式使用最多）
 
 #### Spring事务的传播行为？
 
 Spring事务传播行为说的是，当多个事务同时存在的时候，Spring如何处理这些事务的行为
 
-- PROPAGATION_REQUIRED：@Transactional默认传播行为，如果当前存在事务，就加入该事务，如果当前没有事务，就**创建一个新事务**。
-- PROPAGATION_SUPPORTS：支持当前事务，如果当前存在事务，就加入该事务，如果当前不存在事务，就**以非事务执行**。
-- PROPAGATION_MANDATORY：支持当前事务，如果当前存在事务，就加入该事务，如果当前不存在事务，**就抛出异常**。
-- PROPAGATION_REQUIRES_NEW：创建新事务，无论当前存不存在事务，都创建新事务。
-- PROPAGATION_NOT_SUPPORTED：以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。
-- PROPAGATION_NEVER：以非事务方式执行，如果当前存在事务，则抛出异常。
-- PROPAGATION_NESTED：如果当前存在事务，则在**嵌套事务内执行**。如果当前没有事务，则按REQUIRED属性执行。
+- **REQUIRED**：@Transactional默认传播行为，如果当前存在事务，就加入该事务，如果当前没有事务，就**创建一个新事务**。
+- **REQUIRES_NEW**：创建新事务，无论当前存不存在事务，都创建新事务。
+- **NESTED**：如果当前存在事务，则在**嵌套事务内执行**。如果当前没有事务，则按REQUIRED属性执行。
+- SUPPORTS：支持当前事务，如果当前存在事务，就加入该事务，如果当前不存在事务，就**以非事务执行**。
+- NOT_SUPPORTED：以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。
+- MANDATORY：支持当前事务，如果当前存在事务，就加入该事务，如果当前不存在事务，**就抛出异常**。
+- NEVER：以非事务方式执行，如果当前存在事务，则抛出异常。
 
+#### `@Transactional` 事务注解原理
 
+**`@Transactional` 的工作机制是基于 AOP 实现的**，如果一个类或者一个类中的 public 方法上被标注`@Transactional` 注解的话，Spring
+容器就会在启动的时候为其创建一个代理类，在调用被`@Transactional` 注解的 public 方法的时候，实际调用的是，`TransactionInterceptor` 类中的 `invoke()`
+方法。这个方法的作用就是在目标方法之前开启事务，方法执行过程中如果遇到异常的时候回滚事务，方法调用完成之后提交事务。
+
+### Spring是如何解决循环依赖的？
+
+- 循环依赖：两个bean：A和B，A里面有B，B里面有A。初始化A时注入B，初始化B时注入A，这样就造成了一种循环。
+- 解决方法：三级缓存，首先把所有的bean放到第三级缓存里，三级缓存是为了保证bean的唯一性。实例化之后的bean放入二级缓存，属性注入后的完整对象放入一级缓存中。
 
 
 
