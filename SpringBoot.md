@@ -1,3 +1,5 @@
+## SpringBoot
+
 ### SpringBoot有哪些优点？
 
 SpringBoot是Spring开源组织下的子项目，是Spring组件的一站式解决方案，它是一个脚手架，具有以下优点：
@@ -142,6 +144,7 @@ public ConfigurableApplicationContext run(String... args) {
 
 1.
 从spring.factories配置文件中加载EventPublishingListen对象，该对象拥有SimpleApplicationMulticaster属性，即在SpringBoot启动过程的不同阶段用来发射内置的生命周期事件；
+
 2. 准备环境变量，包括系统变量，环境变量，命令行参数，默认变量，servlet相关配置变量，配置文件等等；
 3. 控制台答应SpringBoot标志；
 4. 根据不同类型环境**创建**不同类型的**applicationcontext容器**，例如servlet、reactive；
@@ -151,6 +154,8 @@ public ConfigurableApplicationContext run(String... args) {
 8. 执行刷新容器后的后置处理逻辑，注意这里为空方法；//到这里启动基本就完成了，计时结束
 9. 调用ApplicationRunner和CommandLineRunner的run方法，我们实现这两个接口可以在spring容器其启动后需要的一些东西，比如加载一些业务数据等；
 10. 返回容器对象
+
+## Spring安全
 
 
 

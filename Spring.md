@@ -56,25 +56,25 @@ IoC容器是Spring用来实现IoC的载体，IoC容器实际上是个Map，实�
    ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();//AbstractApplicationContext.refresh()
    ```
 
-2. 加载Bean的定义信息（xml配置，注解）
+2. 加载Bean的Definitions（xml配置，注解）
 
    ```java
    loadBeanDefinitions(beanFactory);  //AbstractRefreshableApplicationContext.refreshBeanFactory()
    ```
 
-3. 配置工厂的上下文特征，比如工厂的类加载器和后处理器
+3. 配置beanFactory的上下文特征，比如工厂的ClassLoader和post-processors
 
    ```
    prepareBeanFactory(beanFactory);
    ```
 
-4. 调用Bean工厂的后处理方法
+4. 调用beanFactory的post-processors
 
    ```java
    invokeBeanFactoryPostProcessors(beanFactory); 
    ```
 
-5. 注册Bean实例的后处理方法
+5. 注册Bean实例的post-processors
 
    ```
    registerBeanPostProcessors(beanFactory);
@@ -84,15 +84,22 @@ IoC容器是Spring用来实现IoC的载体，IoC容器实际上是个Map，实�
 
 7. bean的生命周期
 
+   ```java
+   finishBeanFactoryInitialization(beanFactory);// Instantiate all remaining (non-lazy-init) singletons.
+   ```
+
 8. 结束，发布相应的event
+
+   ```java
+   finishRefresh();
+   ```
 
 ### BeanFactory & ApplicationContext
 
 BeanFactory和ApplicationContext是Spring的两大核心接口，都可以当做Spring的容器。ApplicationContext是BeanFactory的子接口。
 
-- BeanFactory：可以简单理解为一个HashMap，Key是BeanName，Value是Bean实例。通常只提供put和get两个功能。
--
-ApplicationContext：是一个高级容器，它比BeanFactory多了很多功能。它支持BeanFactory工具类，访问文件资源，事件发布通知，接口回调等功能。它内部定义了一个refresh方法，用于刷新整个容器，重新加载所有的Bean。
+- BeanFactory：是Spring里面最底层的接口，包含了各种Bean的定义，控制bean的生命周期，维护bean之间的依赖关系。
+- ApplicationContext：是一个高级容器，它比BeanFactory多了很多功能。它支持加载文件资源，国际化，事件发布通知，为bean配置懒加载等功能。
 
 ![img](https://img-blog.csdnimg.cn/20191105111441363.png)
 
@@ -100,7 +107,7 @@ ApplicationContext：是一个高级容器，它比BeanFactory多了很多功能
 
 ### 什么是SpringBean？
 
-一句话，被IoC容器管理的对象。在代码实现上是BeanDefinition的实例
+一句话，被IoC容器管理的对象。
 
 我们需要告诉IoC容器帮我们管理哪些对象，这个是通过配置元数据来定义的。配置元数据可以是XML文件、注解或Java配置类。
 
@@ -192,7 +199,7 @@ protected Object doCreateBean(String beanName,RootBeanDefinition mbd,@Nullable O
 
 无状态Bean是线程安全的，有状态Bean是线程不安全的
 
-- 无状态Bean：没有实例变量的对象，不能保存数据，是不变类。比如DAO,Service
+- 无状态Bean：没有实例变量的对象，不能保存数据，是不变类。
 - 有状态Bean：有实例变量的对象，能保存数据
 
 解决方法：
@@ -205,7 +212,7 @@ protected Object doCreateBean(String beanName,RootBeanDefinition mbd,@Nullable O
 ### 什么是AOP？
 
 - 定义：AOP（Aspect-Oriented Programming），即面向切面编程
-- 作用：能够酱那些与业务无关，却为业务模块所共同调用的逻辑（例如事务处理、日志管理、权限控制）封装起来，便于减少系统重复的代码，增加模块化，降低模块间耦合度，并且有利于未来的可扩展性和可维护性。
+- 作用：能够将那些与业务无关，却为业务模块所共同调用的逻辑（例如事务处理、日志管理、权限控制）封装起来，便于减少系统重复的代码，降低模块间耦合度，并且有利于未来的可扩展性和可维护性。
 - 实现原理：SpringAOP是基于动态代理的，如果要代理的对象实现了某个接口，那么SpringAOP会使用JDK动态代理去创建代理对象；如果没有实现接口，就会使用CGLIB代理创建代理对象。
 
 ### Spring  AOP和AspectJ AOP有什么区别
