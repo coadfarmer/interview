@@ -141,8 +141,7 @@ public ConfigurableApplicationContext run(String... args) {
 }
 ```
 
-1.
-从spring.factories配置文件中加载EventPublishingListener对象，该对象拥有SimpleApplicationMulticaster属性，即在SpringBoot启动过程的不同阶段用来发射内置的生命周期事件；
+1. 从spring.factories配置文件中加载EventPublishingListener对象，该对象拥有SimpleApplicationMulticaster属性，即在SpringBoot启动过程的不同阶段用来发射内置的生命周期事件；
 2. 准备环境变量，包括系统变量，环境变量，命令行参数，默认变量，servlet相关配置变量，配置文件等等；
 3. 控制台打印SpringBoot标志；
 4. 根据不同类型环境**创建**不同类型的**applicationcontext容器**，例如servlet、reactive；
