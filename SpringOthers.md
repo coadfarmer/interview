@@ -4,10 +4,9 @@
 
 SpringBoot是Spring开源组织下的子项目，是Spring组件的一站式解决方案，它是一个脚手架，具有以下优点：
 
-1. 容易上手，提升开发效率
-2. 开箱即用，远离繁琐的配置
+1. 容易上手，简化开发
+2. 开箱即用，远离繁琐的xml配置
 3. 提供了一系列大型项目通用的非业务性功能，例如：内嵌服务器、安全管理、运行数据监控、运行状况检查和外部化配置等。
-4. 没有代码生成，不需要xml配置
 5. 避免了大量的Maven导入和各版本冲突
 
 ### SpringBoot自动配置的原理
@@ -20,7 +19,7 @@ SpringBoot自动装配依赖于核心注解@SpringBootApplication，它包括三
 
 ### SpringBoot如何解决跨域问题
 
-在传统的SSM项目中，我们使用CORS解决跨域问题，在SpringBoot中，可以通过实现WebMvcConfigurer接口然后重写addCorsMappings方法解决跨域问题。
+在传统的SSM项目中，我们使用CORS解决跨域问题，在SpringBoot中，可以通过实现WebMvcConfigurer接口重写addCorsMappings方法解决跨域问题。
 
 ```java
 @Configuration
@@ -142,10 +141,10 @@ public ConfigurableApplicationContext run(String... args) {
 }
 ```
 
-1.从spring.factories配置文件中加载EventPublishingListen对象，该对象拥有SimpleApplicationMulticaster属性，即在SpringBoot启动过程的不同阶段用来发射内置的生命周期事件；
-
+1.
+从spring.factories配置文件中加载EventPublishingListener对象，该对象拥有SimpleApplicationMulticaster属性，即在SpringBoot启动过程的不同阶段用来发射内置的生命周期事件；
 2. 准备环境变量，包括系统变量，环境变量，命令行参数，默认变量，servlet相关配置变量，配置文件等等；
-3. 控制台答应SpringBoot标志；
+3. 控制台打印SpringBoot标志；
 4. 根据不同类型环境**创建**不同类型的**applicationcontext容器**，例如servlet、reactive；
 5. 从spring.factories配置文件中加载异常报告实例，这里加载的是FailureAnalyzers； //这一步在springboot2.6中放到了catch方法里
 6. 为刚创建的容器对象做一些初始化工作，扫描注解类就是在这一步完成的；
@@ -156,17 +155,17 @@ public ConfigurableApplicationContext run(String... args) {
 
 ## Spring安全
 
-## RBAC 模型了解吗？
+### RBAC 模型了解吗？
 
 RBAC 即基于角色的权限访问控制（Role-Based Access Control）。这是一种通过角色关联权限，角色同时又关联用户的授权的方式。
 
 ![RBAC](https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/booksRBAC.png)
 
-## 什么是 Cookie ? Cookie 的作用是什么?
+### 什么是 Cookie ? Cookie 的作用是什么?
 
 `Cookies` 是某些网站为了辨别用户身份而储存在用户本地终端上的数据。
 
-## 什么是 Token?什么是 JWT?
+### 什么是 Token?什么是 JWT?
 
 JWT 本质上就一段签名的 JSON 格式的数据。由于它是带有签名的，因此接收者便可以验证它的真实性。
 
@@ -250,8 +249,6 @@ OAuth2.0是为了解决用户授权第三方应用而产生的
 5. 注入Bean情况不同，拦截器加载时间在SpringContext之前
 
 6. 控制执行顺序不同，Filter通过@Order注解控制执行顺序，拦截器默认的执行顺序，就是它的注册顺序，也可以通过`Order`手动设置控制，值越小越先执行。
-
-
 
 
 
