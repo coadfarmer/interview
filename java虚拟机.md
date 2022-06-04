@@ -57,7 +57,7 @@ HotSpot虚拟机并没有完全拘泥java虚拟机类加载机制规范，是按
 
     - 指针碰撞
 
-      如果Java堆中的内存是绝对规整的，所有用过的内存放一边，空闲的内存放一边，中间放一个指针作为分界点的指示器，分配内存时就是把指针向空闲内存那边挪动与对象大小相等的距离
+      如果Java堆中的内存是绝对规整的，所有用过的内存放一边，空闲的内存放一边，中间放一个指针作为分界点的指示器，分配内存时就是把指针向空闲内存那边偏移与对象大小相等的距离
 
     - 空闲列表
 
@@ -188,7 +188,7 @@ GC采用有向图的方式记录和管理堆中的所有对象，去判断哪些
 - jps（JVM Process Status）:查看所有java进程;
 - jstat（JVM Statistics Monitoring Tool）：查看某个java进程的运行数据;
 - jmap（Memory Map for Java）：生成堆转储快照
-- jstack（Stack Trace for Java）：生成虚拟机当前时刻的线程快照
+- jstack（Stack Trace for Java）：生成当前时刻的线程快照
 
 可视化工具
 

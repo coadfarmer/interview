@@ -35,6 +35,7 @@ public class SemaphoreExample1 {
         }
         threadPool.shutdown();
         System.out.println("finish");
+        System.out.println("finish");
     }
 
     public static void test(int threadnum) throws InterruptedException {

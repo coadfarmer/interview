@@ -50,7 +50,7 @@
 
 ### volatile
 
-- 保证被volatile修饰的变量存取都在主存中进行
+- 保证被volatile修饰的变量存取都在主存中（相较于工作内存）进行
 
 - 原子操作，防止指令重排
 
@@ -185,6 +185,8 @@ lock（）调用tryAcquire尝试获取锁
 
 unlock（）调用tryRelease释放锁
 
+### ReentrantReadWriteLock
+
 ### 线程通信的几种方式
 
 详见https://redspider.gitbook.io/concurrent/di-yi-pian-ji-chu-pian/5
@@ -306,12 +308,12 @@ public ThreadPoolExecutor(int corePoolSize,//线程池的核心线程数量
 
 - threadFactory：线程工厂，用来创建线程
 
-- handler：饱和策略
+- handler：拒绝策略
 
-  - **`ThreadPoolExecutor.AbortPolicy`** ：抛出 `RejectedExecutionException`来拒绝新任务的处理。（默认）
+    - **`ThreadPoolExecutor.AbortPolicy`** ：抛出 `RejectedExecutionException`来拒绝新任务的处理。（默认）
 
-  - **`ThreadPoolExecutor.CallerRunsPolicy`** ：调用执行自己的线程运行任务，也就是直接在调用`execute`方法的线程中运行(`run`)
-    被拒绝的任务，如果执行程序已关闭，则会丢弃该任务。因此这种策略会降低对于新任务提交速度，影响程序的整体性能。如果您的应用程序可以承受此延迟并且你要求任何一个任务请求都要被执行的话，你可以选择这个策略。
-  - **`ThreadPoolExecutor.DiscardPolicy`** ：不处理新任务，直接丢弃掉。
-  - **`ThreadPoolExecutor.DiscardOldestPolicy`** ： 此策略将丢弃最早的未处理的任务请求
+    - **`ThreadPoolExecutor.CallerRunsPolicy`** ：调用执行自己的线程运行任务，也就是直接在调用`execute`方法的线程中运行(`run`)
+      被拒绝的任务，如果执行程序已关闭，则会丢弃该任务。因此这种策略会降低对于新任务提交速度，影响程序的整体性能。如果您的应用程序可以承受此延迟并且你要求任何一个任务请求都要被执行的话，你可以选择这个策略。
+    - **`ThreadPoolExecutor.DiscardPolicy`** ：不处理新任务，直接丢弃掉。
+    - **`ThreadPoolExecutor.DiscardOldestPolicy`** ： 此策略将丢弃最早的未处理的任务请求
 

@@ -14,7 +14,7 @@ SpringBoot是Spring开源组织下的子项目，是Spring组件的一站式解�
 SpringBoot自动装配依赖于核心注解@SpringBootApplication，它包括三个注解
 
 - @EnableAutoConfiguration：启动SpringBoot的自动配置机制
-- @Configuration：通过spring.factories，在上下文中注册额外的bean或导入其他配置类
+- @Configuration：通过spring.factories，在上下文中注册额外的bean
 - @ComponentScan：扫描被@Cpmponent注解的bean，注解默认会扫描该类所在包下的所有类
 
 ### SpringBoot如何解决跨域问题
