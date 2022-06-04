@@ -127,5 +127,11 @@ public class Basic {
         System.out.println("我".length());
     }
 
+    @Test
+    public void testBitMove() {
+        int i = 8;
+        System.out.println((i >> 2) + 1);
+    }
+
 
 }
