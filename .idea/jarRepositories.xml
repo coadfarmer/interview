@@ -2,9 +2,24 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
+      <option name="id" value="ipd-repo-snapshot" />
+      <option name="name" value="ipd-repo-snapshot" />
+      <option name="url" value="https://maven.cloudartifact.lfg.dragon.tools.huawei.com/artifactory/Product-DigitalIPD-snapshot" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Central Repository" />
       <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="huawei-central-maven" />
+      <option name="name" value="huawei-central-maven" />
+      <option name="url" value="https://cmc.centralrepo.rnd.huawei.com/maven/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Central Repository" />
+      <option name="url" value="https://cmc.centralrepo.rnd.huawei.com/maven/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
@@ -15,6 +30,26 @@
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="ipd-repo-release" />
+      <option name="name" value="ipd-repo-release" />
+      <option name="url" value="https://maven.cloudartifact.lfg.dragon.tools.huawei.com/artifactory/Product-DigitalIPD-release" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="artifactory-thirdparty-maven" />
+      <option name="name" value="artifactory-thirdparty-maven" />
+      <option name="url" value="https://dgg.maven.repo.cmc.tools.huawei.com/artifactory/BPIT-public-maven/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="language-dragon-maven" />
+      <option name="name" value="Artifactory Maven" />
+      <option name="url" value="https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="artifactory-maven" />
+      <option name="name" value="artifactory-maven" />
+      <option name="url" value="https://dgg.maven.repo.cmc.tools.huawei.com/artifactory/BPIT-public-maven/" />
     </remote-repository>
   </component>
 </project>
