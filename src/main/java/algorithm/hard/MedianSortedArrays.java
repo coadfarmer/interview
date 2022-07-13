@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  */
 public class MedianSortedArrays {
 
-    class Pointer{
+    static class Pointer{
         int tag;
         int p;
 
@@ -150,8 +150,8 @@ public class MedianSortedArrays {
 
     @Test
     public void test() {
-        int[] nums1 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18};
-        int[] nums2 = {0,6};
+        int[] nums1 = {1,2};
+        int[] nums2 = {1,1};
         double v = findMedianSortedArrays(nums1, nums2);
         System.out.println(v);
 
