@@ -2,6 +2,7 @@ package algorithm.hard;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +12,16 @@ import java.util.stream.Collectors;
  * @since 2022年07月11日
  */
 public class MedianSortedArrays {
+
+    class Pointer{
+        int tag;
+        int p;
+
+        public boolean pointerEqual(int tag,int p){
+            return this.tag == tag && this.p == p;
+        }
+
+    }
 
     /**
      * 上下文切换法
@@ -43,63 +54,59 @@ public class MedianSortedArrays {
         int p1 = 0; //记录nums1的下标
         int p2 = 0; //记录nums2的下标
         int p = 0; //记录移动位数
-        int tag = nums1[0]<nums2[0]?0:1; //记录当前指针是哪个数组 0-nums1，1-nums-2
+        int tag = nums1[0] < nums2[0] ? 0 : 1; //记录当前指针是哪个数组 0-nums1，1-nums-2
         int pre_num = Math.min(nums1[0], nums2[0]);//记录上一个指针指向哪个数组 0-nums1, 1-nums2
-        int pre_back = 0;
         int m = (nums1.length + nums2.length) >> 1; //记录中位数的下标
         m = Math.max(m, 0);
+        Pointer initPointer = new Pointer();
+        initPointer.tag = tag;
+        initPointer.p = tag == 1?p1:p2;
+        List<Pointer> pointerList = new ArrayList<>(m);
+        pointerList.add(initPointer);
         while (p < m) {
+
             pre_num = tag == 0 ? nums1[p1] : nums2[p2];
-            if (nums1[p1] < nums2[p2]) {
-                if (p1 < nums1.length - 1) {
+            if (tag == 0) {
+                if (p1 < nums1.length - 1 && nums1[p1 + 1] > nums2[p2]) {
+                    if (nums1[p1] < nums2[p2]) {
+                        tag = 1;
+                    } else if (nums1[p1] == nums2[p2]) {
+                        if(pointerList.get(Math.max(p - 1, 0)).pointerEqual(1,p2)){
+                            tag = 0;
+                        }
+                    }
                     p1++;
-                    tag = resetTag(nums1[p1],nums2[p2]);
-                } else if (p2 < nums2.length - 1) {
+                } else if (p1 < nums1.length - 1 && nums1[p1 + 1] < nums2[p2]) {
+                    p1++;
+                } else if (p1 < nums1.length - 1 && nums1[p1 + 1] == nums2[p2]) {
+                    p1++;
                     tag = 1;
-                    if(nums2[p2]<nums1[p1]){
-                        p2++;
-                    }
-                }
-            } else if (nums1[p1] > nums2[p2]) {
-                if (p2 < nums2.length - 1) {
-                    p2++;
-                    tag = resetTag(nums1[p1],nums2[p2]);
-                } else if (p1 < nums1.length - 1) {
-                    tag = 0;
-                    if(nums1[p1]<nums2[p2]){
-                        p1++;
-                    }
+                } else if (p1 >= nums1.length - 1) {
+                    tag = 1;
                 }
             } else {
-                if (p1 < nums1.length - 1 && p2 < nums2.length - 1) {
-                    p1++;
-                    p2++;
-                    if (nums1[p1] > nums2[p2]) {
-                        p1--;
-                        tag = 1;
-                    } else if (nums1[p1] < nums2[p2]) {
-                        p2--;
+                if (p2 < nums2.length - 1 && nums2[p2 + 1] > nums1[p1]) {
+                    if (nums2[p2] <= nums1[p1]) {
                         tag = 0;
                     } else if (nums1[p1] == nums2[p2]) {
-                        if(pre_back == 0){
-                            p1--;
+                        if(pointerList.get(Math.max(p - 1, 0)).pointerEqual(0,p1)){
                             tag = 1;
-                            pre_back = 1;
-                        }else {
-                            p2--;
-                            tag = 0;
-                            pre_back = 0;
                         }
-
                     }
-                } else if (p1 < nums1.length - 1) {
-                    p1++;
-                    tag = 0;
-                } else if (p2 < nums2.length - 1) {
                     p2++;
-                    tag = 1;
+                } else if (p2 < nums2.length - 1 && nums2[p2 + 1] < nums1[p1]) {
+                    p2++;
+                } else if (p2 < nums2.length - 1 && nums2[p2 + 1] == nums1[p1]) {
+                    p2++;
+                    tag = 0;
+                } else if (p2 >= nums2.length - 1) {
+                    tag = 0;
                 }
             }
+            Pointer pointer = new Pointer();
+            pointer.tag = tag;
+            pointer.p = tag == 1?p1:p2;
+            pointerList.add(pointer);
             p++;
         }
         //判断奇偶
@@ -143,8 +150,8 @@ public class MedianSortedArrays {
 
     @Test
     public void test() {
-        int[] nums1 = {2};
-        int[] nums2 = {2};
+        int[] nums1 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18};
+        int[] nums2 = {0,6};
         double v = findMedianSortedArrays(nums1, nums2);
         System.out.println(v);
 
