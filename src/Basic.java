@@ -133,5 +133,11 @@ public class Basic {
         System.out.println((i >> 2) + 1);
     }
 
+    @Test
+    public void testCore(){
+        int i = Runtime.getRuntime().availableProcessors();
+        System.out.println(i);
+    }
+
 
 }
