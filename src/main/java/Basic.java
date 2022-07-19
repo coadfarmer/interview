@@ -1,11 +1,9 @@
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Collectors;
 
 public class Basic {
 
@@ -131,6 +129,13 @@ public class Basic {
     public void testBitMove() {
         int i = 8;
         System.out.println((i >> 2) + 1);
+    }
+
+    @Test
+    public void testStringsToIntegerList(){
+        String[] strings = {"23","65","20"};
+        List<Integer> integerList = Arrays.stream(strings).map(Integer::valueOf).collect(Collectors.toList());
+        System.out.println(integerList);
     }
 
 
