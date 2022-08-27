@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
  */
 public class MedianSortedArrays {
 
-    static class Pointer{
+    static class Pointer {
         int tag;
         int p;
 
-        public boolean pointerEqual(int tag,int p){
+        public boolean pointerEqual(int tag, int p) {
             return this.tag == tag && this.p == p;
         }
 
@@ -60,7 +60,7 @@ public class MedianSortedArrays {
         m = Math.max(m, 0);
         Pointer initPointer = new Pointer();
         initPointer.tag = tag;
-        initPointer.p = tag == 1?p1:p2;
+        initPointer.p = tag == 1 ? p1 : p2;
         List<Pointer> pointerList = new ArrayList<>(m);
         pointerList.add(initPointer);
         while (p < m) {
@@ -71,8 +71,8 @@ public class MedianSortedArrays {
                     if (nums1[p1] < nums2[p2]) {
                         tag = 1;
                     } else if (nums1[p1] == nums2[p2]) {
-                        if(pointerList.get(Math.max(p - 1, 0)).pointerEqual(1,p2)){
-                            tag = 0;
+                        if (!pointerList.get(Math.max(p - 1, 0)).pointerEqual(1, p2)) {
+                            tag = 1;
                         }
                     }
                     p1++;
@@ -89,8 +89,8 @@ public class MedianSortedArrays {
                     if (nums2[p2] <= nums1[p1]) {
                         tag = 0;
                     } else if (nums1[p1] == nums2[p2]) {
-                        if(pointerList.get(Math.max(p - 1, 0)).pointerEqual(0,p1)){
-                            tag = 1;
+                        if (!pointerList.get(Math.max(p - 1, 0)).pointerEqual(0, p1)) {
+                            tag = 0;
                         }
                     }
                     p2++;
@@ -105,7 +105,7 @@ public class MedianSortedArrays {
             }
             Pointer pointer = new Pointer();
             pointer.tag = tag;
-            pointer.p = tag == 1?p1:p2;
+            pointer.p = tag == 0 ? p1 : p2;
             pointerList.add(pointer);
             p++;
         }
@@ -150,8 +150,8 @@ public class MedianSortedArrays {
 
     @Test
     public void test() {
-        int[] nums1 = {1,2};
-        int[] nums2 = {1,1};
+        int[] nums1 = {1, 2};
+        int[] nums2 = {1, 1};
         double v = findMedianSortedArrays(nums1, nums2);
         System.out.println(v);
 
