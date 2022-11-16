@@ -1,4 +1,4 @@
-package main.java.DynamicProxy.cglibProxy;
+package DynamicProxy.cglibProxy;
 
 /**
  * 1.实现一个使用阿里云发送短信的类

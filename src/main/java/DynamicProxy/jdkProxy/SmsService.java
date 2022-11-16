@@ -1,4 +1,4 @@
-package main.java.DynamicProxy.jdkProxy;
+package DynamicProxy.jdkProxy;
 
 /**
  * 1.定义发送短信的接口

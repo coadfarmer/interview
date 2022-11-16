@@ -1,4 +1,4 @@
-package main.java.DynamicProxy.cglibProxy;
+package DynamicProxy.cglibProxy;
 
 /**
  * @Author: xjjiang
@@ -9,7 +9,7 @@ public class TestCglib {
 
 
     public static void main(String[] args) {
-        AliSmsService aliSmsService = (AliSmsService) CglibProxyFactory.getProxy(AliSmsService.class);
+        DynamicProxy.cglibProxy.AliSmsService aliSmsService = (DynamicProxy.cglibProxy.AliSmsService) DynamicProxy.cglibProxy.CglibProxyFactory.getProxy(DynamicProxy.cglibProxy.AliSmsService.class);
         aliSmsService.send("java");
     }
 

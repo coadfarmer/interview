@@ -1,4 +1,4 @@
-package main.java.DynamicProxy.jdkProxy;
+package DynamicProxy.jdkProxy;
 
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ public class TestProxy {
 
     @Test
     public void test() {
-        SmsService smsService = (SmsService) JdkProxyFactory.getProxy(new SmsServiceImpl());
+        DynamicProxy.jdkProxy.SmsService smsService = (DynamicProxy.jdkProxy.SmsService) DynamicProxy.jdkProxy.JdkProxyFactory.getProxy(new DynamicProxy.jdkProxy.SmsServiceImpl());
         smsService.send("java");
     }
 
