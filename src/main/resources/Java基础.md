@@ -60,9 +60,14 @@ StringBuilder速度快 ，StringBuffer线程安全
 
 大多数情况下使用的都是ArrayList，因为ArrayList支持随机访问，在get（index）的时候ArrayList更快
 
+实测ArrayList比LinkedList更快因为：
+
+1. 现代内存管理是以4k、8k、16k的页为单位，一个页要么在缓存里，要么调入缓存再读写。数组前后数据几乎是百分百命中，而LinkedList随着程序运行分配到不同的页而导致性能急剧下降。另外移动数据的话数组可以走DMA，移动一块连续的内存数据效率远高于多次移动不同的数据。
+2. ArrayList比LinkedList节约内存，LinkedList内存占用是ArrayList占用的4倍以上。
+
 #### ArrayList扩容
 
-ArrayList的扩容机制比较简单，当元素不够用的时候调用grow()方法进行扩容，扩大到原来长度的1.5倍左右。
+ArrayList的扩容机制比较简单，当元素不够用的时候调用grow()方法进行扩容，直接扩容到10，然后以1.5倍的倍率进行扩容。如果传入参数0，则是从1开始扩容。
 
 ```java
 /**
