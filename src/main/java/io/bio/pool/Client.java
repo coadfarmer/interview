@@ -1,4 +1,4 @@
-package io.bio.multi;
+package io.bio.pool;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -21,16 +21,16 @@ public class Client {
             PrintStream ps = new PrintStream(socket.getOutputStream());
             //3.使用循环不断的发送消息给服务端
             Scanner scanner = new Scanner(System.in);
-            while (true){
+            String msg = scanner.nextLine();
+            while (!msg.equals("/exit")){
                 System.out.print("请说:");
-                String msg = scanner.nextLine();
+                msg = scanner.nextLine();
                 ps.println(msg);
                 ps.flush();
-            }
+            };
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
 }
