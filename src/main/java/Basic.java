@@ -1,14 +1,12 @@
 import inherite.User;
-import main.java.inherite.Dad;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.stream.Collectors;
 
 public class Basic {
 
@@ -25,31 +23,31 @@ public class Basic {
 //    }
 
     public static void main(String[] args) {
-        int m = 3,n = 6,k = 0;
-
-        while(m<n) {
-
-            ++k;
-            m++;--n;
-
+        Scanner scanner = new Scanner(System.in);
+        String s = scanner.nextLine();
+        char[] charArray = s.toCharArray();
+        Set<Character> set = new HashSet<>(0);
+        for (char c : charArray) {
+            if ((int) c <= 127)
+                set.add(c);
         }
-        System.out.println(k);
-//        String result;
-//        for(char a = 'x';a <= 'z';a++) {
-//            for(char b = 'x';b <= 'z';b++) {
-//                if(a != b){
-//                    for(char c = 'x';c <= 'z';c++){
-//                        if( c != b && a != c){
-//                            if(c != 'x' && c != 'z' && a != 'x'){
-//                                result = "a:" + a + ",b:"+b+",c:"+c;
-//                                System.out.println(result);
-//                                break ;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        System.out.println(set.size());
+
+    }
+
+    public static int summery(int n){
+        int summery = 0;
+        while (n > 6){
+            summery += n/3;
+            n = n/3;
+        }
+        return summery;
+    }
+
+    @Test
+    public void testSum(){
+        int summery = summery(4);
+        System.out.println(summery);
     }
 
     @Test
@@ -251,6 +249,7 @@ public class Basic {
         System.out.println(user);
         System.out.println(user1);
     }
+
 
 
 
