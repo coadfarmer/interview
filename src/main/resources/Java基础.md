@@ -32,7 +32,7 @@ String内部被标记为final
 
 ##### StringBuilder与StringBuffer
 
-StringBuilder速度快 ，StringBuffer线程安全
+StringBuilder速度快 ，StringBuffer线程安全(synchronized锁)
 
 ### 二、面向对象
 
@@ -62,7 +62,7 @@ StringBuilder速度快 ，StringBuffer线程安全
 
 实测ArrayList比LinkedList更快因为：
 
-1. 现代内存管理是以4k、8k、16k的页为单位，一个页要么在缓存里，要么调入缓存再读写。数组前后数据几乎是百分百命中，而LinkedList随着程序运行分配到不同的页而导致性能急剧下降。另外移动数据的话数组可以走DMA，移动一块连续的内存数据效率远高于多次移动不同的数据。
+1. 现代内存管理是以4k、8k、16k的页为单位，一个页要么在缓存里，要么调入缓存再读写。数组前后数据几乎是百分百命中，而LinkedList随着程序运行分配到不同的页而导致性能急剧下降。另外移动数据的话数组可以走DMA(Direct Memory Access，直接[存储器](https://baike.baidu.com/item/存储器/1583185?fromModule=lemma_inlink)访问) ，移动一块连续的内存数据效率远高于多次移动不同的数据。
 2. ArrayList比LinkedList节约内存，LinkedList内存占用是ArrayList占用的4倍以上。
 
 #### ArrayList扩容
@@ -200,6 +200,8 @@ JDK代理有一个致命弊端是只能代理实现了接口的类，为了解�
 
 ##### CGLIB动态代理
 
+利用ASM开源包，把代理对象类的class文件加载进来，通过修改其字节码生成子类来处理。
+
 步骤
 
 1. 自定义MethodInterceptor，实现其中的interceptor方法，对目标类进行增强
@@ -230,7 +232,7 @@ BIO属于同步阻塞I/O。一个请求对应一个线程。
 
 #### NIO（Non Blocking IO）
 
-NIO通过selector（select、poll、epoll）实现了一个线程对应多个请求，selector会进行轮询，有IO请求就处理。
+NIO通过selector（select、poll、epoll）实现了一 个线程对应多个请求，selector会进行轮询，有IO请求就处理。
 
 #### AIO （Asynchronous IO）
 

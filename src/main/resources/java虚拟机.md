@@ -18,7 +18,7 @@
 
   如下图所示Eden区，Survivor区（S0，S1）属于新生代，中间属于老年代，最下层属于永久代
 
-  ![hotspot-heap-structure](https://javaguide.cn/assets/hotspot-heap-structure.784465da.png)
+  ![hotspot-heap-structure](https://javaguide.cn/assets/hotspot-heap-structure.41533631.png)
 
   对象首先在Eden区分配空间，当一次垃圾回收完成之后，如果对象依然存活，则会从Eden转移到Survivor区，年龄加1。在Survivor区中年龄增加到一定岁数（默认是15岁,可以通过参数 `-XX:MaxTenuringThreshold`
   来设置），就会被晋升到老年代中。大对象会直接进入老年代。

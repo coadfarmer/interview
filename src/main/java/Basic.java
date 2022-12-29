@@ -3,7 +3,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -33,6 +32,14 @@ public class Basic {
         }
         System.out.println(set.size());
 
+    }
+
+    public static int max(int[] n){
+        OptionalInt max = Arrays.stream(n).max();
+        if(max.isPresent()){
+            return max.getAsInt();
+        }
+        return 0;
     }
 
     public static int summery(int n){
