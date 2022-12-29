@@ -1,4 +1,4 @@
-package main.java.concurrent.aqs;
+package concurrent.aqs;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

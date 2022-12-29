@@ -1,4 +1,4 @@
-package main.java.concurrent.aqs;
+package concurrent.aqs;
 
 class Consumer {
     private Depot depot;

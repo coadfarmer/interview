@@ -1,4 +1,4 @@
-package main.java.concurrent.cas;
+package concurrent.cas;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;

@@ -1,6 +1,7 @@
-package main.java.concurrent.completableFuture;
+package concurrent.completableFuture;
 
-import main.java.concurrent.cas.CASDemo;
+
+import concurrent.cas.CASDemo;
 import org.junit.Test;
 
 import java.util.concurrent.CompletableFuture;

@@ -1,4 +1,4 @@
-package main.java.concurrent.aqs;
+package concurrent.aqs;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
