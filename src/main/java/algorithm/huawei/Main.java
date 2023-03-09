@@ -1,35 +1,40 @@
 package algorithm.huawei;
 
-import java.util.*;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.*;
 
 public class Main{
     public static void main(String[] args) throws IOException {
-        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-        String[] in = bf.readLine().split(";");
-        int x = 0;
-        int y = 0;
-        for(String s : in){
-            // 不满足题目给定坐标规则
-            if(!s.matches("[WASD][0-9]{1,2}")){
-                continue;
-            }
-            int val = Integer.valueOf(s.substring(1));
-            switch(s.charAt(0)){
-                case 'W':
-                    y += val;
-                    break;
-                case 'S':
-                    y -= val;
-                    break;
-                case 'A':
-                    x -= val;
-                    break;
-                case 'D':
-                    x += val;
-                    break;
-            }
+        String s = "Hello world";
+        String[] split = s.split(" ");
+
+        StringBuilder result = new StringBuilder();
+        for (String s1 : split) {
+            String reverse = reverse(s1);
+            result.append(reverse).append(" ");
         }
-        System.out.println(x+","+y);
+        System.out.println(result);
     }
+
+    public static String reverse(String s){
+//        char[] chars = s.toCharArray();
+//        StringBuilder result = new StringBuilder();
+//        for (int i = 0; i < chars.length; i++) {
+//            result.append(chars[chars.length - i - 1]);
+//        }
+//        return result.toString();
+        return StringUtils.reverse(s);
+    }
+
+//    private static final Main main = new Main();
+//
+//    private  Main(){
+//
+//    }
+//
+//    public Main getMain(){
+//        return main;
+//    }
+
 }
