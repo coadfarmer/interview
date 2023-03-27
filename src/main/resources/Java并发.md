@@ -238,7 +238,11 @@ unlock（）调用tryRelease释放锁
 
 ### concurrentHashMap
 
-在 `ConcurrentHashMap` 中，无论是读操作还是写操作都能保证很高的性能：在进行读操作时(几乎)不需要加锁，而在写操作时通过锁分段技术只对所操作的段加锁而不影响客户端对其它段的访问。
+ConcurrentHashMap 采用了分段锁技术来实现线程安全，具体来说，它将 Map 拆分成若干个 Segment 段，每个 Segment 段内部都是一个类似于 HashMap 的数据结构，不同的线程可以同时访问不同的 Segment，从而实现了多线程并发访问。
+
+每个 Segment 段内部采用 ReentrantLock 锁来实现同步控制，当一个线程对某个 Segment 进行操作时，只需要锁住这个 Segment，而不需要锁住整个 Map，从而减小了锁的粒度，提高了并发性能。
+
+ConcurrentHashMap 通过使用分段锁技术，实现了在高并发环境下的线程安全，并且相比于传统的同步方式，减小了锁的粒度，提高了并发性能。
 
 ### CopyOnWriteArrayList
 
