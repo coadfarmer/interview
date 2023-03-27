@@ -20,7 +20,7 @@ import java.util.List;
 public class ChatGPTClient {
 
     private static final String OPENAI_API_URL = "https://api.openai.com/v1/engines/davinci-codex/completions";
-    private static final String OPENAI_API_KEY = "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";
+    private static final String OPENAI_API_KEY = "***";
 
     public static String generateText(String prompt) {
         HttpClient httpclient = HttpClients.createDefault();
@@ -50,8 +50,6 @@ public class ChatGPTClient {
             if (entity != null) {
                 text = EntityUtils.toString(entity);
             }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
