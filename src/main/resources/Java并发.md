@@ -6,14 +6,21 @@
 
 ### 线程的6种状态
 
-| 状态名称     | 中文名   | 解释                                    |
-| ------------ | :------- | --------------------------------------- |
-| NEW          | 初始状态 | new一个实例                             |
-| RUNNABLE     | 可运行   | 调用start（）方法                       |
-| BLOCKED      | 阻塞     | Synchronized等锁                        |
-| WAITING      | 等待     | Object.wait()，只有通过notify（）能唤醒 |
-| TIME_WAITING | 超时     | Thread.sleep(time)                      |
-| TERMINATED   | 终止     | run方法执行完                           |
+| 状态名称     | 中文名   | 解释                                                         |
+| ------------ | :------- | ------------------------------------------------------------ |
+| NEW          | 初始状态 | new一个实例                                                  |
+| RUNNABLE     | 可运行   | 调用start（）方法                                            |
+| BLOCKED      | 阻塞     | Synchronized等锁                                             |
+| WAITING      | 等待     | 当线程调用了wait()、join()或者LockSupport.park()方法         |
+| TIME_WAITING | 超时     | 当线程调用了sleep()、wait(timeout)、join(timeout)或者LockSupport.parkNanos()方法 |
+| TERMINATED   | 终止     | run方法执行完                                                |
+
+### 如何提升并发性能
+
+1. 减少锁的竞争，使用使用线程安全的ConcurrentHashMap或无锁算法
+2. 使用线程池
+3. 异步编程
+4. 使用内存映射文件
 
 ### Java对象头与锁标志位
 

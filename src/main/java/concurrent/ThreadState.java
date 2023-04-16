@@ -1,4 +1,4 @@
-package main.java.concurrent;
+package concurrent;
 
 /**
  * @Author: xjjiang
@@ -8,33 +8,37 @@ package main.java.concurrent;
 public class ThreadState {
 
     public static void main(String[] args) throws InterruptedException {
-
-        //NEW
-        Thread thread = new Thread(() -> {
-            System.out.println("NEW-------" + Thread.currentThread());
-            System.out.println("1111111111");
-            System.out.println("222222222222");
-        });
-        System.out.println(thread.getName() + "state" + thread.getState());
-
-        //RUNNABLE
-        thread.start();
-
-        //BLOCKED
-        new Thread(() -> {
-            synchronized ("a") {
-                System.out.println("BLOCKED------" + Thread.currentThread());
-                System.out.println("333333333333");
-                System.out.println("4444444444444");
+        Thread t1 = new Thread(() -> {
+            System.out.println("Thread t1 is running...");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        }).start();
+            System.out.println("Thread t1 is done.");
+        });
 
-        //WAITING
-        thread.join();
+        Thread t2 = new Thread(() -> {
+            System.out.println("Thread t2 is running...");
+            try {
+                Thread.sleep(6000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Thread t2 is done.");
+        });
 
-        //TIME_WAITING
+        // 启动线程t1和t2
+        t1.start();
+        t2.start();
+
+        // 主线程等待线程t1和t2执行完毕
+        t2.join();
+        t1.join();
 
 
+        // 线程t1和t2执行完毕后再执行此处代码
+        System.out.println("All threads are done.");
     }//TERMINATED
 
 }
