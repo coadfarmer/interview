@@ -6,16 +6,16 @@ package designPattern.singleton;
  * {@code @Description:} 单例设计模式----饿汉式
  */
 public class Singleton {
-    private static final Singleton INSTANCE;
 
-    static {
-        INSTANCE = new Singleton();
+    private Singleton(){}
+
+    private static final class InstanceHolder {
+        static final Singleton INSTANCE = new Singleton();
     }
 
-    private Singleton() {}
-
-    public static Singleton getInstance() {
-        return INSTANCE;
+    public static Singleton getInstance(){
+        return InstanceHolder.INSTANCE;
     }
+
 }
 
