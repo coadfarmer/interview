@@ -40,71 +40,47 @@ public class CorsConfig implements WebMvcConfigurer {
 ### SpringBoot启动流程
 
 ```java
-public ConfigurableApplicationContext run(String...args){
-        //计时器
-        long startTime=System.nanoTime();
-        //创建引导上下文
-        DefaultBootstrapContext bootstrapContext=createBootstrapContext();
-        ConfigurableApplicationContext context=null;
-        //让当前应用进入headless模式
-        configureHeadlessProperty();
-        //从spring.factories获取监听器——EventPublishingRunListener
-        SpringApplicationRunListeners listeners=getRunListeners(args);
-        //遍历所有SpringApplicationRunListeners调用starting，相当于通知所有感兴趣系统正在启动的人，项目正在starting
-        listeners.starting(bootstrapContext,this.mainApplicationClass);
-        try{
-        //保存命令参数
-        ApplicationArguments applicationArguments=new DefaultApplicationArguments(args);
-        //准备环境，返回或创建基础环境信息，一般是servlet
-        ConfigurableEnvironment environment=prepareEnvironment(listeners,bootstrapContext,applicationArguments);
+@SpringBootApplication
+public class MyApplication {
+    public static void main(String[] args) {
+        // 加载 Spring Boot 启动类
+        SpringApplication app = new SpringApplication(MyApplication.class);
+        // 加载应用配置文件
+        app.setDefaultProperties(Collections.singletonMap("server.port", "8080"));
+        // 启动 Spring 容器
+        ConfigurableApplicationContext context = app.run(args);
+        // 打印 Banner
+        printBanner();
+        // 执行命令行运行器
+        runCommandLineRunner(context);
+        // 应用程序启动成功，等待客户端请求
+    }
 
-        configureIgnoreBeanInfo(environment);
-        //打印Banner
-        Banner printedBanner=printBanner(environment);
-        //创建ApplicationContext，根据应用类型（Servlet）得到AnnotationConfigServletWebServerApplicationContext
-        context=createApplicationContext();
+    private static void printBanner() {
+        Banner banner = new SpringApplicationBanner();
+        banner.printBanner(new StandardEnvironment());
+    }
 
-        context.setApplicationStartup(this.applicationStartup);
-        //准备ApplicationContext的基本信息，初始化和扩展ApplicationContext
-        prepareContext(bootstrapContext,context,environment,listeners,applicationArguments,printedBanner);
-        //刷新ApplicationContext——Spring容器refresh
-        refreshContext(context);
-        afterRefresh(context,applicationArguments);
-        //计时结束
-        Duration timeTakenToStartup=Duration.ofNanos(System.nanoTime()-startTime);
-        if(this.logStartupInfo){
-        new StartupInfoLogger(this.mainApplicationClass).logStarted(getApplicationLog(),timeTakenToStartup);
+    private static void runCommandLineRunner(ConfigurableApplicationContext context) {
+        String[] runnerNames = context.getBeanNamesForType(CommandLineRunner.class);
+        Arrays.sort(runnerNames);
+        for (String name : runnerNames) {
+            CommandLineRunner runner = context.getBean(name, CommandLineRunner.class);
+            runner.run();
         }
-        listeners.started(context,timeTakenToStartup);
-        callRunners(context,applicationArguments);
-        }
-        catch(Throwable ex){
-        handleRunFailure(context,ex,listeners);
-        throw new IllegalStateException(ex);
-        }
-        try{
-        Duration timeTakenToReady=Duration.ofNanos(System.nanoTime()-startTime);
-        listeners.ready(context,timeTakenToReady);
-        }
-        catch(Throwable ex){
-        handleRunFailure(context,ex,null);
-        throw new IllegalStateException(ex);
-        }
-        return context;
-        }
+    }
+}
+//注意，以上只是简化的代码，并非springboot源码
 ```
 
-1. 创建SpringApplication
-2. 运行SpringApplication
-   1. 计时器
-   2. 创建引导上下文
-   3. 从spring.factories获取监听器——EventPublishingRunListener并紧接着就发布一个启动事件
-   4. 准备环境，返回或创建基础环境信息，一般是servlet
-   5. 打印Banner
-   6. 创建ApplicationContext，这里实际得到AnnotationConfigServletWebServerApplicationContext
-   7. 准备ApplicationContext的基本信息，初始化和扩展ApplicationContext
-   8. 刷新ApplicationContext——Spring容器refresh
-   9. 计时结束
+1. 加载 Spring Boot 启动类：Spring Boot 应用的启动类必须包含 `@SpringBootApplication` 注解，该注解会启用 Spring 的组件扫描和自动配置功能，并开启 Spring Boot 应用的自动配置。
+2. 加载应用配置文件：Spring Boot 应用会自动加载 `application.properties` 或 `application.yml` 配置文件中的配置信息，该配置信息包括数据库连接信息、服务端口号等。（`spring.factories` 文件的加载）
+3. 启动 Spring 容器：Spring Boot 应用会创建 Spring 容器，加载所有的配置文件，执行所有的 `@Configuration` 标注的配置类和 `@Bean` 标注的方法，完成所有的依赖注入和 Bean 的创建。（打印banner）
+4. 启动自动配置：Spring Boot 应用会根据自动配置机制，加载所有的自动配置类，并按照优先级顺序执行这些自动配置类，完成对应用程序的自动配置。
+5. 启动 Web 服务器：Spring Boot 应用会根据配置文件中的端口号等信息，启动嵌入式的 Web 服务器，如 Tomcat、Jetty 或 Undertow。
+6. 注册 WebServlet、Filter 和 Listener：Spring Boot 应用会根据配置文件中的信息，注册 WebServlet、Filter 和 Listener，处理客户端请求。
+7. 执行命令行运行器：如果 Spring Boot 应用包含 `CommandLineRunner` 或 `ApplicationRunner` 接口的实现类，Spring Boot 应用会在 Web 服务器启动之后，自动执行这些实现类中的 `run()` 方法。
+8. 完成启动：Spring Boot 应用启动成功，等待客户端请求。
 
 ## Spring安全
 
@@ -160,17 +136,15 @@ OAuth2.0是为了解决用户授权第三方应用而产生的
 
 ![OAuth运行流程](https://www.ruanyifeng.com/blogimg/asset/2014/bg2014051203.png)
 
-（A)用户打开客户端以后，客户端要求用户给予授权。
-
-（B）用户同意给予客户端授权。
-
-（C）客户端使用上一步获得的授权，向认证服务器申请令牌（Token）。
-
-（D）认证服务器对客户端进行认证以后，确认无误，同意发放令牌（Token）。
-
-（E）客户端使用令牌（Token），向资源服务器申请获取资源。
-
-（F）资源服务器确认令牌（Token）无误，同意向客户端开放资源。
+1. 用户请求访问需要认证和授权的资源，此时系统会检查用户是否已经登录。
+2. 如果用户未登录，系统会要求用户登录，这通常通过用户名和密码进行。
+3. 如果用户登录成功，系统会验证用户的身份并生成一个授权码。
+4. 然后，系统会将授权码发送给客户端。
+5. 客户端使用授权码向认证服务器请求令牌。
+6. 认证服务器对授权码进行验证，并生成一个访问令牌。
+7. 认证服务器将访问令牌发送给客户端。
+8. 客户端使用访问令牌请求受保护的资源。
+9. 资源服务器验证访问令牌，并返回请求的资源。
 
 ### SpringSecurity
 

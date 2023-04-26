@@ -171,8 +171,9 @@ protected Object doCreateBean(String beanName,RootBeanDefinition mbd,@Nullable O
 
 ### 什么是AOP？
 
-- 定义：AOP（Aspect-Oriented Programming），即面向切面编程
-- 作用：能够将那些与业务无关，却为业务模块所共同调用的逻辑（例如事务处理、日志管理、权限控制）封装起来，便于减少系统重复的代码，降低模块间耦合度，并且有利于未来的可扩展性和可维护性。
+- AOP（Aspect Oriented Programming，面向切面编程）是一种编程范式，它旨在通过将横切关注点（cross-cutting concerns）从业务逻辑中分离出来，提高代码的模块化、可重用性和可维护性。横切关注点是那些对于整个应用程序而言具有共性的功能，比如日志、事务管理、异常处理等。这些关注点通常会分散在应用程序的不同模块中，使用 AOP 可以将它们统一处理。
+
+  AOP 的核心思想是通过将关注点模块化，实现对其的横向复用，即使得多个模块共享同一个关注点的实现，而不是将其复制粘贴到多个模块中。这样可以减少代码重复、提高代码的可维护性和可重用性。AOP 主要使用切面、连接点和通知等概念来实现对关注点的模块化处理。
 - 实现原理：SpringAOP是基于动态代理的，如果要代理的对象实现了某个接口，那么SpringAOP会使用JDK动态代理去创建代理对象；如果没有实现接口，就会使用CGLIB代理创建代理对象。
 
 ### Spring  AOP和AspectJ AOP有什么区别
