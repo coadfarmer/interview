@@ -1,5 +1,5 @@
 ## Spring 概述
-### ![Spring主要模块](../../Pictures/jvme0c60b4606711fc4a0b6faf03230247a.png)
+### ![071607350378800098581](071607350378800098581.jpg)
 
 ### 什么是Spring？
 
@@ -9,23 +9,16 @@ Spring是一个轻量级Java开发框架，是为了解决企业级业务开发�
 
 优点
 
-- 方便解耦，简化开发
-
-  可以将所有对象的创建和依赖关系的维护交给Spring管理。
-
-- 方便集成各种优秀框架
-
-- AOP编程支持
-
-  Spring提供面向切面编程，可以方便地实现对程序进行拦截，监控等功能。
-
-- 声明式事务支持
-
-  只需要配置就能完成对事务的管理，无需手动编程
+1. 轻量级：Spring 是一个轻量级的框架，不需要依赖于其他第三方的软件包，只需要依赖于 JDK 就可以运行。
+2. 松耦合：Spring 支持松耦合的设计模式，使用依赖注入（DI）和控制反转（IoC）实现了对象之间松耦合的关系。
+3. 容器：Spring 提供了一个容器，用于管理应用程序中的对象的生命周期，这个容器可以自动创建、组装、管理对象之间的依赖关系。
+4. AOP 功能：Spring 支持面向切面编程，通过 AOP 功能可以将某些非业务逻辑的功能（如安全性、事务、日志等）与业务逻辑分离出来，从而使代码更加清晰、易于维护。
+5. 事务管理：Spring 提供了一个事务管理 API，可以在应用程序中管理事务，从而确保数据的一致性和可靠性。
+6. 支持多种数据源：Spring 对 ORM 框架、JDBC 和其他数据访问 API 的支持使得使用多种数据源变得更加容易。
 
 缺点
 
-- Spring明明是一个很轻量级的框架，却给人感觉大而全
+- 侵入式：在 Spring 框架中，很多的功能都是通过注解或 XML 配置文件来实现，这些注解和配置文件可能会让应用程序变得侵入式
 - Spring依赖反射，反射影响性能
 
 ### Spring由哪些模块组成
@@ -38,61 +31,28 @@ Spring是一个轻量级Java开发框架，是为了解决企业级业务开发�
 - Spring Data Access：数据库相关模块
 - SpringTest：测试相关模块
 
-## IOC
+## 什么是控制反转和依赖注入
 
-### IOC（Inverse of  Control）
+### IOC（Inverse of  Control）控制反转
 
-IoC是一种设计思想，而不是一个具体的技术实现。IoC的思想就是将原本在程序中手动创建对象的控制权，交给Spring来管理。
+控制反转指的是，由框架来控制对象的创建和生命周期，而不是由应用程序来直接管理。传统的程序设计中，对象的创建和依赖关系的管理通常由程序员来完成，而这样会导致应用程序之间的耦合度高、扩展性差。而控制反转将对象的创建和依赖关系的管理交给框架完成，框架可以根据配置文件或注解等方式来管理对象之间的依赖关系，提高了应用程序的可扩展性和可维护性。
 
-比如要实例化一个Service，这个Service可能依赖了很多类，那我们要搞清楚每一个类的构造函数，这很麻烦。利用IoC，只需要配置好，然后在需要的地方引用就行了。
+### DI（Dependency Injection）依赖注入
 
-IoC容器是Spring用来实现IoC的载体，IoC容器实际上是个Map，实现原理是工厂模式加反射机制。
+依赖注入指的是，在创建一个对象时，将该对象所需要的其他对象或资源通过构造方法或Setter方法注入到该对象中。依赖注入可以有效地解耦对象之间的依赖关系，提高了对象的复用性和可维护性。在Spring框架中，依赖注入是通过IoC容器来实现的。
 
 ### IOC流程
 
-1. 获得一个刷新后的BeanFactory
+IoC的流程包括了BeanFactory容器的创建、Bean定义信息的加载、Bean实例化和初始化、BeanPostProcessor的注册和执行等多个环节
 
-   ```java
-   ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();//AbstractApplicationContext.refresh()
-   ```
-
-2. 加载Bean的Definitions（xml配置，注解）
-
-   ```java
-   loadBeanDefinitions(beanFactory);  //AbstractRefreshableApplicationContext.refreshBeanFactory()
-   ```
-
-3. 配置beanFactory的上下文特征，比如工厂的ClassLoader和post-processors
-
-   ```
-   prepareBeanFactory(beanFactory);
-   ```
-
-4. 调用beanFactory的post-processors
-
-   ```java
-   invokeBeanFactoryPostProcessors(beanFactory); 
-   ```
-
-5. 注册Bean实例的post-processors
-
-   ```
-   registerBeanPostProcessors(beanFactory);
-   ```
-
-6. 国际化->初始化多播器->初始化其他特殊bean->注册监听器
-
-7. bean的生命周期
-
-   ```java
-   finishBeanFactoryInitialization(beanFactory);// Instantiate all remaining (non-lazy-init) singletons.
-   ```
-
-8. 结束，发布相应的event
-
-   ```java
-   finishRefresh();
-   ```
+1. 创建BeanFactory容器，它是Spring IoC容器的实现者，负责实例化、配置和组装Bean，同时还管理Bean之间的依赖关系。在Spring中，BeanFactory是一个接口，有多个具体的实现类，如DefaultListableBeanFactory、XmlBeanFactory、ApplicationContext等。
+2. 加载Bean的定义信息，通常是从XML配置文件或注解中读取Bean的定义信息，包括Bean的名称、类型、依赖关系等，然后把这些定义信息封装成BeanDefinition对象保存在BeanFactory中。
+3. 配置BeanFactory的上下文特征，比如设置ClassLoader、资源加载器等。
+4. 应用BeanFactoryPostProcessor，在BeanFactory标准初始化之后修改BeanFactory的Bean定义。BeanFactoryPostProcessor是一个扩展点，可以自定义实现该接口来修改BeanFactory中的Bean定义。
+5. 注册BeanPostProcessor，它是IoC容器在实例化Bean的过程中调用的扩展点。它可以在实例化Bean的前后执行自定义的逻辑。例如，Spring提供的AutowiredAnnotationBeanPostProcessor会扫描Bean中的@Autowired注解，将被注入的Bean注入到该Bean中。
+6. 实例化Bean，包括创建Bean实例、依赖注入、初始化等。在创建Bean实例时，如果该Bean实现了InitializingBean接口，则会调用afterPropertiesSet()方法；如果定义了init-method，则会调用该方法。在依赖注入时，如果该Bean实现了BeanPostProcessor接口，则会调用postProcessBeforeInitialization()方法，在初始化完成后会调用postProcessAfterInitialization()方法。
+7. 如果Bean是单例的，则会将其缓存在IoC容器中，供后续使用。
+8. 容器关闭时，会触发Bean销毁的回调方法。如果Bean实现了DisposableBean接口，则会调用destroy()方法；如果定义了destroy-method，则会调用该方法。
 
 ### BeanFactory & ApplicationContext
 
@@ -211,8 +171,9 @@ protected Object doCreateBean(String beanName,RootBeanDefinition mbd,@Nullable O
 
 ### 什么是AOP？
 
-- 定义：AOP（Aspect-Oriented Programming），即面向切面编程
-- 作用：能够将那些与业务无关，却为业务模块所共同调用的逻辑（例如事务处理、日志管理、权限控制）封装起来，便于减少系统重复的代码，降低模块间耦合度，并且有利于未来的可扩展性和可维护性。
+- AOP（Aspect Oriented Programming，面向切面编程）是一种编程范式，它旨在通过将横切关注点（cross-cutting concerns）从业务逻辑中分离出来，提高代码的模块化、可重用性和可维护性。横切关注点是那些对于整个应用程序而言具有共性的功能，比如日志、事务管理、异常处理等。这些关注点通常会分散在应用程序的不同模块中，使用 AOP 可以将它们统一处理。
+
+  AOP 的核心思想是通过将关注点模块化，实现对其的横向复用，即使得多个模块共享同一个关注点的实现，而不是将其复制粘贴到多个模块中。这样可以减少代码重复、提高代码的可维护性和可重用性。AOP 主要使用切面、连接点和通知等概念来实现对关注点的模块化处理。
 - 实现原理：SpringAOP是基于动态代理的，如果要代理的对象实现了某个接口，那么SpringAOP会使用JDK动态代理去创建代理对象；如果没有实现接口，就会使用CGLIB代理创建代理对象。
 
 ### Spring  AOP和AspectJ AOP有什么区别

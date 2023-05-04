@@ -31,6 +31,15 @@ public class Sort {
 
     }
 
+    @Test
+    public void testQuickSort(){
+        int[] nums = {13, 96, 17, 86, 35, 22};
+        quickSort1(nums,0,nums.length-1);
+        for (int num : nums) {
+            System.out.print(num+" ");
+        }
+    }
+
     /**
      * 快速排序
      *
@@ -57,6 +66,29 @@ public class Sort {
         System.out.println("j:" + j);
         quickSort(nums, left, j - 1);
         quickSort(nums, j + 1, right);
+    }
+
+    public void quickSort1(int[] nums,int left,int right){
+        if(left>=right){
+            return;
+        }
+        int pivot = nums[left];
+        int i = left;
+        int j = right;
+        while (i<j){
+            while (i<j && nums[i] <= pivot){
+                i++;
+            }
+            while (i<j && nums[j] > pivot){
+                j--;
+            }
+            if(i<j){
+                swap(nums,i,j);
+            }
+        }
+        swap(nums,left,i);
+        quickSort1(nums,left,i-1);
+        quickSort1(nums,i+1,right);
     }
 
     /**
