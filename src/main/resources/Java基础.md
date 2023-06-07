@@ -55,6 +55,8 @@ StringBuilder速度快 ，StringBuffer线程安全(synchronized锁)
 
 ### 三、java容器
 
+![Java底层源码解析·容器篇——Set - 知乎](v2-689722026d9e353abe26625adfe1fdda_r.jpg)
+
 #### ArrayList和LinkedList
 
 大多数情况下使用的都是ArrayList，因为ArrayList支持随机访问，在get（index）的时候ArrayList更快
