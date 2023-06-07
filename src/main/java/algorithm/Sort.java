@@ -68,6 +68,29 @@ public class Sort {
 //        quickSort(nums, j + 1, right);
 //    }
 
+    /**
+     * 冒泡排序
+     * @param nums 排序前
+     * @return nums
+     */
+    public int[] bubbleSort(int[] nums){
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = 0; j < nums.length - i - 1; j++) {
+                if (nums[j] > nums[j + 1]) {
+                    swap(nums, j, j + 1);
+                }
+            }
+        }
+        return nums;
+    }
+
+    @Test
+    public void testBubbleSort(){
+        int[] nums = {2,7,9,10,1};
+        bubbleSort(nums);
+        System.out.println(Arrays.toString(nums));
+    }
+
     public void quickSort1(int[] nums,int left,int right){
         if (left >= right) return;
         int pivotIndex = partition(nums, left, right);
