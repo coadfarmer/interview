@@ -1,10 +1,11 @@
-package main.java.algorithm;
+package algorithm;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * @Author: xjjiang
@@ -33,11 +34,10 @@ public class Sort {
 
     @Test
     public void testQuickSort(){
-        int[] nums = {13, 96, 17, 86, 35, 22};
-        quickSort1(nums,0,nums.length-1);
-        for (int num : nums) {
-            System.out.print(num+" ");
-        }
+        int[] nums = {5, 2, 9, 1, 5, 6, 3};
+        int[] expected = {1, 2, 3, 5, 5, 6, 9};
+        quickSort1(nums, 0, nums.length - 1);
+        Assertions.assertArrayEquals(expected, nums);
     }
 
     /**
@@ -47,48 +47,48 @@ public class Sort {
      * @param i
      * @param j
      */
-    public void quickSort(int[] nums, int i, int j) {
-        if (i >= j)
-            return;
-        int baseNum = nums[i];
-        int left = i;
-        int right = j;
-        while (i < j) {
-            while (nums[j] >= baseNum && i < j)
-                j--;
-            while (nums[i] <= baseNum && i < j)
-                i++;
-            swap(nums, i, j);
-        }
-        swap(nums, left, j);
-        System.out.println("left:" + left);
-        System.out.println("i:" + i);
-        System.out.println("j:" + j);
-        quickSort(nums, left, j - 1);
-        quickSort(nums, j + 1, right);
-    }
+//    public void quickSort(int[] nums, int i, int j) {
+//        if (i >= j)
+//            return;
+//        int baseNum = nums[i];
+//        int left = i;
+//        int right = j;
+//        while (i < j) {
+//            while (nums[j] >= baseNum && i < j)
+//                j--;
+//            while (nums[i] <= baseNum && i < j)
+//                i++;
+//            swap(nums, i, j);
+//        }
+//        swap(nums, left, j);
+//        System.out.println("left:" + left);
+//        System.out.println("i:" + i);
+//        System.out.println("j:" + j);
+//        quickSort(nums, left, j - 1);
+//        quickSort(nums, j + 1, right);
+//    }
 
     public void quickSort1(int[] nums,int left,int right){
-        if(left>=right){
-            return;
-        }
+        if (left >= right) return;
+        int pivotIndex = partition(nums, left, right);
+        quickSort1(nums, left, pivotIndex - 1);
+        quickSort1(nums, pivotIndex + 1, right);
+    }
+
+    private int partition(int[] nums, int left, int right) {
         int pivot = nums[left];
-        int i = left;
-        int j = right;
-        while (i<j){
-            while (i<j && nums[i] <= pivot){
+        int i = left + 1, j = right;
+        while (i <= j) {
+            if (nums[i] <= pivot) {
                 i++;
-            }
-            while (i<j && nums[j] > pivot){
+            } else if (nums[j] > pivot) {
                 j--;
-            }
-            if(i<j){
-                swap(nums,i,j);
+            } else {
+                swap(nums, i++, j--);
             }
         }
-        swap(nums,left,i);
-        quickSort1(nums,left,i-1);
-        quickSort1(nums,i+1,right);
+        swap(nums, left, j);
+        return j;
     }
 
     /**
