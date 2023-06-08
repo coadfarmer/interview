@@ -78,6 +78,43 @@ BeanFactory和ApplicationContext是Spring的两大核心接口，都可以当做
 - @Service
 - @Controller
 
+### @Component和@Bean有什么区别？
+
+`@Component`和`@Bean`是Spring中的两个关键注解，用于实现依赖注入和控制反转（IoC）的功能，但它们在使用和功能上有一些区别。
+
+1. `@Component`注解是用于标识一个类为Spring的组件（Component），表示该类需要由Spring进行管理和实例化。可以将`@Component`应用于任何普通的Java类，将其纳入Spring的上下文中，使其成为可以被其他组件自动注入和使用的Bean。
+2. `@Bean`注解通常用于配置类中的方法级别，用于声明一个由Spring管理的Bean实例。通过在配置类中使用`@Bean`注解，可以将方法的返回值注册为一个Bean，并将其纳入Spring的上下文中，以供其他组件使用。
+
+主要区别如下：
+
+- `@Component`用于标识类，使其成为Spring的组件；`@Bean`用于声明方法，将其返回值注册为Spring的Bean。
+- `@Component`通常用于自动扫描和自动装配，通过组件扫描将其纳入Spring上下文中；`@Bean`通常用于显式配置，通过配置类中的方法将其注册为Bean。
+- `@Component`可以应用于任何普通的Java类；`@Bean`通常应用于配置类中的方法。
+- `@Component`不提供显式配置选项，而`@Bean`可以提供更多的配置选项，例如设置Bean的名称、作用域、初始化方法等。
+
+### @Bean可以指定顺序吗？
+
+是的，`@Bean`注解可以指定顺序。在Spring Framework中，`@Bean`注解支持定义Bean的加载顺序，以确保特定Bean在容器中的加载顺序。
+
+使用`@Order`注解时，您可以在`@Bean`方法上添加`@Order`注解，并指定一个整数值来表示顺序。较小的值表示较高的优先级。例如：
+
+```java
+@Configuration
+public class MyConfiguration {
+
+    @Bean
+    @Order(1)
+    public MyBean firstBean() {
+        return new MyBean();
+    }
+
+    @Bean
+    @Order(2)
+    public MyBean secondBean() {
+        return new MyBean();
+    }
+}
+```
 ### 注入Bean的注解有哪些？
 
 - @Autowired：Spring提供的注解，默认注入方式是byType，可以用@Qualifier来显示指定名称
@@ -91,7 +128,7 @@ BeanFactory和ApplicationContext是Spring的两大核心接口，都可以当做
 - session：HTTP session内有效
 - global-session：全局session作用域。Spring5已经没有了。
 
-### Bean的生命周期
+### Bean的生命周期（重要）
 
 ![Spring的生命周期](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/2/15/170485f55560d36e~tplv-t2oaga2asx-zoom-in-crop-mark:1304:0:0:0.awebp)
 
