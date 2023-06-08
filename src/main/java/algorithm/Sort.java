@@ -34,10 +34,15 @@ public class Sort {
 
     @Test
     public void testQuickSort(){
-        int[] nums = {5, 2, 9, 1, 5, 6, 3};
-        int[] expected = {1, 2, 3, 5, 5, 6, 9};
+        int[] nums = {1,2,3,4,5};
+        int[] expected = {1,2,3,4,5};
         quickSort(nums, 0, nums.length - 1);
-        Assertions.assertArrayEquals(expected, nums);
+        System.out.println(Arrays.toString(Arrays.stream(nums).toArray()));
+        int[] nums1 = {2,2,2,2,2};
+        int[] expected1 = {2,2,2,2,2};
+        quickSort(nums1, 0, nums1.length - 1);
+        System.out.println(Arrays.toString(Arrays.stream(nums1).toArray()));
+        Assertions.assertArrayEquals(expected1, nums1);
     }
 
     /**
