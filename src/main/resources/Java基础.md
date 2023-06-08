@@ -34,6 +34,22 @@ String内部被标记为final
 
 StringBuilder速度快 ，StringBuffer线程安全(synchronized锁)
 
+#### 类限定符
+
+| 限定符    | 类内部 | 同一包内 | 子类 | 其他包 |
+| --------- | ------ | -------- | ---- | ------ |
+| public    | ✔️      | ✔️        | ✔️    | ✔️      |
+| protected | ✔️      | ✔️        | ✔️    | ❌      |
+| default   | ✔️      | ✔️        | ❌    | ❌      |
+| private   | ✔️      | ❌        | ❌    | ❌      |
+
+- `public`: 具有最宽泛的访问权限，对于所有类都是可见的，可以被同一包内的类、子类以及其他包中的类访问。
+- `protected`: 允许类的成员在同一包内以及子类中访问，对于其他包中的类来说是不可见的。
+- 默认（不使用任何修饰符）: 默认访问修饰符（也称为包访问修饰符）的作用范围是同一包内，允许同一包内的类访问，但对于其他包中的类和子类是不可见的。
+- `private`: 具有最窄的访问权限，只允许类的成员在类内部访问，对于同一包内的其他类以及子类都是不可见的。
+
+需要注意的是，表格中的 "✔️" 表示具有对应访问权限，而 "❌" 表示没有对应访问权限。
+
 ### 二、面向对象
 
 #### 继承
@@ -59,7 +75,9 @@ StringBuilder速度快 ，StringBuffer线程安全(synchronized锁)
 
 #### ArrayList和LinkedList
 
-大多数情况下使用的都是ArrayList，因为ArrayList支持随机访问，在get（index）的时候ArrayList更快
+大多数情况下使用的都是ArrayList，因为ArrayList支持随机访问，在get（index）的时候ArrayList更快。
+
+> `ArrayList`的最大容量由 `Integer.MAX_VALUE` 决定，即 2^31 - 1。`LinkedList` 没有一个固定的最大容量限制。
 
 实测ArrayList比LinkedList更快因为：
 

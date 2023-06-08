@@ -36,37 +36,35 @@ public class Sort {
     public void testQuickSort(){
         int[] nums = {5, 2, 9, 1, 5, 6, 3};
         int[] expected = {1, 2, 3, 5, 5, 6, 9};
-        quickSort1(nums, 0, nums.length - 1);
+        quickSort(nums, 0, nums.length - 1);
         Assertions.assertArrayEquals(expected, nums);
     }
 
     /**
      * 快速排序
-     *
      * @param nums
-     * @param i
-     * @param j
+     * @param left
+     * @param right
      */
-//    public void quickSort(int[] nums, int i, int j) {
-//        if (i >= j)
-//            return;
-//        int baseNum = nums[i];
-//        int left = i;
-//        int right = j;
-//        while (i < j) {
-//            while (nums[j] >= baseNum && i < j)
-//                j--;
-//            while (nums[i] <= baseNum && i < j)
-//                i++;
-//            swap(nums, i, j);
-//        }
-//        swap(nums, left, j);
-//        System.out.println("left:" + left);
-//        System.out.println("i:" + i);
-//        System.out.println("j:" + j);
-//        quickSort(nums, left, j - 1);
-//        quickSort(nums, j + 1, right);
-//    }
+    public void quickSort(int[] nums, int left, int right) {
+        if(left>=right){
+            return;
+        }
+        int i = left,j = right;
+        int pivot = nums[i];
+        while (i<j){
+            while (i<j && nums[j]>=pivot){
+                j--;
+            }
+            while (i<j && nums[i]<=pivot){
+                i++;
+            }
+            swap(nums,i,j);
+        }
+        swap(nums,left,i);
+        quickSort(nums,left,i-1);
+        quickSort(nums,j+1,right);
+    }
 
     /**
      * 冒泡排序
@@ -91,28 +89,7 @@ public class Sort {
         System.out.println(Arrays.toString(nums));
     }
 
-    public void quickSort1(int[] nums,int left,int right){
-        if (left >= right) return;
-        int pivotIndex = partition(nums, left, right);
-        quickSort1(nums, left, pivotIndex - 1);
-        quickSort1(nums, pivotIndex + 1, right);
-    }
 
-    private int partition(int[] nums, int left, int right) {
-        int pivot = nums[left];
-        int i = left + 1, j = right;
-        while (i <= j) {
-            if (nums[i] <= pivot) {
-                i++;
-            } else if (nums[j] > pivot) {
-                j--;
-            } else {
-                swap(nums, i++, j--);
-            }
-        }
-        swap(nums, left, j);
-        return j;
-    }
 
     /**
      * 堆排序
