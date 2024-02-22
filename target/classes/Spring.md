@@ -33,13 +33,13 @@ Spring是一个轻量级Java开发框架，是为了解决企业级业务开发�
 
 ## 什么是控制反转和依赖注入
 
-### IOC（Inverse of  Control）控制反转
+### IOC（Inverse of  Control）控制反转（重要）
 
 控制反转指的是，由框架来控制对象的创建和生命周期，而不是由应用程序来直接管理。传统的程序设计中，对象的创建和依赖关系的管理通常由程序员来完成，而这样会导致应用程序之间的耦合度高、扩展性差。而控制反转将对象的创建和依赖关系的管理交给框架完成，框架可以根据配置文件或注解等方式来管理对象之间的依赖关系，提高了应用程序的可扩展性和可维护性。
 
 ### DI（Dependency Injection）依赖注入
 
-依赖注入指的是，在创建一个对象时，将该对象所需要的其他对象或资源通过构造方法或Setter方法注入到该对象中。依赖注入可以有效地解耦对象之间的依赖关系，提高了对象的复用性和可维护性。在Spring框架中，依赖注入是通过IoC容器来实现的。
+依赖注入指的是，在创建一个对象时，将该对象所依赖的其他对象或资源通过构造方法或Setter方法注入到该对象中。依赖注入可以有效地解耦对象之间的依赖关系，提高了对象的复用性和可维护性。在Spring框架中，依赖注入是通过IoC容器来实现的。
 
 ### IOC流程
 
@@ -78,6 +78,43 @@ BeanFactory和ApplicationContext是Spring的两大核心接口，都可以当做
 - @Service
 - @Controller
 
+### @Component和@Bean有什么区别？
+
+`@Component`和`@Bean`是Spring中的两个关键注解，用于实现依赖注入和控制反转（IoC）的功能，但它们在使用和功能上有一些区别。
+
+1. `@Component`注解是用于标识一个类为Spring的组件（Component），表示该类需要由Spring进行管理和实例化。可以将`@Component`应用于任何普通的Java类，将其纳入Spring的上下文中，使其成为可以被其他组件自动注入和使用的Bean。
+2. `@Bean`注解通常用于配置类中的方法级别，用于声明一个由Spring管理的Bean实例。通过在配置类中使用`@Bean`注解，可以将方法的返回值注册为一个Bean，并将其纳入Spring的上下文中，以供其他组件使用。
+
+主要区别如下：
+
+- `@Component`用于标识类，使其成为Spring的组件；`@Bean`用于声明方法，将其返回值注册为Spring的Bean。
+- `@Component`通常用于自动扫描和自动装配，通过组件扫描将其纳入Spring上下文中；`@Bean`通常用于显式配置，通过配置类中的方法将其注册为Bean。
+- `@Component`可以应用于任何普通的Java类；`@Bean`通常应用于配置类中的方法。
+- `@Component`不提供显式配置选项，而`@Bean`可以提供更多的配置选项，例如设置Bean的名称、作用域、初始化方法等。
+
+### @Bean可以指定顺序吗？
+
+是的，`@Bean`注解可以指定顺序。在Spring Framework中，`@Bean`注解支持定义Bean的加载顺序，以确保特定Bean在容器中的加载顺序。
+
+使用`@Order`注解时，您可以在`@Bean`方法上添加`@Order`注解，并指定一个整数值来表示顺序。较小的值表示较高的优先级。例如：
+
+```java
+@Configuration
+public class MyConfiguration {
+
+    @Bean
+    @Order(1)
+    public MyBean firstBean() {
+        return new MyBean();
+    }
+
+    @Bean
+    @Order(2)
+    public MyBean secondBean() {
+        return new MyBean();
+    }
+}
+```
 ### 注入Bean的注解有哪些？
 
 - @Autowired：Spring提供的注解，默认注入方式是byType，可以用@Qualifier来显示指定名称
@@ -91,7 +128,7 @@ BeanFactory和ApplicationContext是Spring的两大核心接口，都可以当做
 - session：HTTP session内有效
 - global-session：全局session作用域。Spring5已经没有了。
 
-### Bean的生命周期
+### Bean的生命周期（重要）
 
 ![Spring的生命周期](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/2/15/170485f55560d36e~tplv-t2oaga2asx-zoom-in-crop-mark:1304:0:0:0.awebp)
 
@@ -169,11 +206,11 @@ protected Object doCreateBean(String beanName,RootBeanDefinition mbd,@Nullable O
 
 ## AOP
 
-### 什么是AOP？
+### 什么是AOP？（重要）
 
-- AOP（Aspect Oriented Programming，面向切面编程）是一种编程范式，它旨在通过将横切关注点（cross-cutting concerns）从业务逻辑中分离出来，提高代码的模块化、可重用性和可维护性。横切关注点是那些对于整个应用程序而言具有共性的功能，比如日志、事务管理、异常处理等。这些关注点通常会分散在应用程序的不同模块中，使用 AOP 可以将它们统一处理。
+- AOP（Aspect Oriented Programming，面向切面编程）是一种编程范式，它旨在通过将横切关注点从业务逻辑中分离出来，提高代码的模块化、可重用性和可维护性。横切关注点是那些对于整个应用程序而言具有共性的功能，比如日志、事务管理、异常处理等。这些关注点通常会分散在应用程序的不同模块中，使用 AOP 可以将它们统一处理。
 
-  AOP 的核心思想是通过将关注点模块化，实现对其的横向复用，即使得多个模块共享同一个关注点的实现，而不是将其复制粘贴到多个模块中。这样可以减少代码重复、提高代码的可维护性和可重用性。AOP 主要使用切面、连接点和通知等概念来实现对关注点的模块化处理。
+  AOP 的核心思想是通过将关注点模块化，实现代码的横向复用，使得多个模块共享同一个关注点的实现，而不是将代码复制粘贴到多个模块中。这样可以减少代码重复、提高代码的可维护性和可重用性。AOP 主要使用切面、连接点和通知等概念来实现对关注点的模块化处理。
 - 实现原理：SpringAOP是基于动态代理的，如果要代理的对象实现了某个接口，那么SpringAOP会使用JDK动态代理去创建代理对象；如果没有实现接口，就会使用CGLIB代理创建代理对象。
 
 ### Spring  AOP和AspectJ AOP有什么区别
@@ -184,13 +221,13 @@ AspectJ的功能比Spring的功能更强大，而且速度更快。所以Spring�
 
 ## Spring
 
-### Spring框架中用了哪些设计模式
+### Spring框架中用了哪些设计模式（重要）
 
 - **工厂设计模式** : Spring 使用工厂模式通过 `BeanFactory`、`ApplicationContext` 创建 bean 对象。
 - **代理设计模式** : Spring AOP 功能的实现。
 - **单例设计模式** : Spring 中的 Bean 默认都是单例的。
 - **模板方法模式** : Spring 中 `jdbcTemplate` 等以 Template 结尾的对数据库操作的类，它们就使用到了模板模式。
-- **包装器设计模式** : 我们的项目需要连接多个数据库，而且不同的客户在每次访问中根据需要会去访问不同的数据库。这种模式让我们可以根据客户的需求能够动态切换不同的数据源。
+- **包装器设计模式** : 我们的项目需要连接多个数据库，而且不同的客户在每次访问中根据需要会去访问不同的数据库。这种模式让我们可以根据客户的需求能够动态切换不同的数据源（DataSource）。
 - **观察者模式:** Spring 事件驱动模型就是观察者模式很经典的一个应用。
 - **适配器模式** : Spring AOP 的增强或通知(Advice)使用到了适配器模式、spring MVC 中也是用到了适配器模式适配`Controller`。
 

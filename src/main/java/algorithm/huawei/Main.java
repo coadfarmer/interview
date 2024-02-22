@@ -5,17 +5,14 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.*;
 
 public class Main{
-    public static void main(String[] args) throws IOException {
-        String s = "Hello world";
-        String[] split = s.split(" ");
-
-        StringBuilder result = new StringBuilder();
-        for (String s1 : split) {
-            String reverse = reverse(s1);
-            result.append(reverse).append(" ");
+        public static void main(String[] args) throws IOException {
+            try {
+                System.out.println("111");
+                new Thread(() -> System.out.println(2/0)).start();
+            } catch (Exception e) {
+                System.out.println("222");
+            }
         }
-        System.out.println(result);
-    }
 
     public static String reverse(String s){
 //        char[] chars = s.toCharArray();
